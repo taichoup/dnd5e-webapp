@@ -11,6 +11,14 @@
 .flex-container {
   display: flex;
   margin-top: 30px;
+  padding: 10px;
+  justify-content: center;
+  background-color: rgba(102, 119, 136, 0.3);
+}
+
+.results {
+  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .sections {
@@ -26,7 +34,7 @@
   justify-content: space-evenly;
   /* border: 1px solid black; */
   padding: 10px;
-  background-color: #f8f8f8f8;
+  /* background-color: #f8f8f8f8; */
   margin-left: 30px;
   margin-right: 30px;
 }
@@ -44,4 +52,41 @@
 
 .result img {
   width: 100%;
+}
+
+#query {
+  font-weight: bold;
+  color: blue;
+}
+
+pre {
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  overflow-x: auto;
+  background: #fff;
+  font-size: 0.96em;
+  line-height: 1.5;
+  box-shadow: 0 6px 8px rgba(102, 119, 136, 0.03),
+    0 1px 2px rgba(102, 119, 136, 0.3), 0 8px 12px rgba(58, 193, 203, 0.1);
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  white-space: pre;
+  background-color: #f8f8f8f8;
+}
+
+form {
+  justify-content: center;
+}
+
+input {
+  width: 40em;
+  height: 10em%;
+  border-radius: 34px;
+  padding: 10px 32px 10px 10px;
 }

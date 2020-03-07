@@ -8,13 +8,17 @@ const reducer = (state, action) => {
     if (type === "NAVIGATE") {
         state.section = payload;
         return state;
-    } else if (type === "GETDATA") {
+    } else if (type === "GETDATA_API") {
         state.data = payload;
         return state;
+    } else if (type === "QUERY") {
+        state.query = payload;
+    } else if (type === "GETDATA_DB") {
+        state.db = payload;
     }
     return state;
 };
 
 // Instanciates a store with our reducer, an initial state, and a function to execute 
 // on any state change
-export const _Store = createStore(reducer, { section: "races", data: null });
+export const _Store = createStore(reducer, { section: "races", data: null, query: "" });

@@ -5,6 +5,7 @@ import { _Store } from './Store';
 import StoreContext from "./StoreContext";
 import { Results } from './Results'
 import { NavItem } from './NavItem';
+import { Form } from './Form';
 ;
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
 
       // console.log("AXIOS: %o", response);
       if (!canceled) {
-        _Store.dispatch({ type: "GETDATA", payload: response.data.results });
+        _Store.dispatch({ type: "GETDATA_API", payload: response.data.results });
       }
     })();
     return () => {
@@ -36,7 +37,7 @@ function App() {
     <StoreContext.Consumer>
       {store => (
         <div className="flex-container">
-          <div className="sections">
+          {/* <div className="sections">
             <NavItem name="Races" path="races" />
             <NavItem name="Subraces" path="subraces" />
             <NavItem name="Classes" path="classes" />
@@ -48,9 +49,9 @@ function App() {
             <NavItem name="Features" path="features" />
             <NavItem name="Equipment" path="equipment" />
             <NavItem name="Proficiencies" path="proficiencies" />
-            {/* <NavItem name="Starting equipment" path="startingequipment" /> */}
           </div>
-          <Results selectedTab={_Store.getState().section} data={_Store.getState().data} />
+          <Results selectedTab={_Store.getState().section} data={_Store.getState().data} /> */}
+          <Form />
         </div >
       )}
     </StoreContext.Consumer>
