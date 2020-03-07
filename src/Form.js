@@ -19,7 +19,7 @@ function handleUserInput(event) {
     _Store.dispatch({ type: "QUERY", payload: event.target.value })
 }
 
-const options = { // TODO: add ids
+const options = {
     shouldSort: true,
     threshold: 0.2,
     location: 0,
@@ -29,6 +29,8 @@ const options = { // TODO: add ids
     keys: ["entries"]
 };
 
+
+// COMMENTS FROM THE REACT TRAINER:
 // no need to have the db in the state (heavy) --> service worker?
 // debounce ? (not on every hit)
 // search button ? 
@@ -82,9 +84,6 @@ export const Form = () => {
                             </pre>
                             )
                         }
-                        {/* {
-                            fuseResults.map(o => <pre>{o.section.toUpperCase() + "\n" + o.entries.filter(e => e.toLowerCase().indexOf(q.toLowerCase()) > -1)}</pre>)
-                        } */}
                     </div>
                 </form>
             }
