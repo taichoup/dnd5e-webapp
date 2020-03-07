@@ -25,12 +25,8 @@ const options = { // TODO: add ids
     location: 0,
     distance: 100,
     maxPatternLength: 32,
-    minMatchCharLength: 2,
-    keys: [
-        "results.name",
-        "results.result.full_name",
-        "results.result.desc"
-    ]
+    minMatchCharLength: 3,
+    keys: ["entries"]
 };
 
 // no need to have the db in the state (heavy) --> service worker?
@@ -47,6 +43,8 @@ export const Form = () => {
             );
             console.log("AXIOS: %o", response);
             _Store.dispatch({ type: "GETDATA_DB", payload: response.data });
+            const db_light = response.data.map(o => { return { section: o.section, entries: o.results.map(o => o.result.name) } }).filter(e => e != null).filter(e => e.section !== "spellcasting" && e.section !== "starting-equipment");
+            _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
         })();
         return () => {
         };
@@ -56,7 +54,9 @@ export const Form = () => {
 
     const _db = _Store.getState().db;
 
-    const fuseResults = _db ? fuse.search(_Store.getState().query) : [];
+    const q = _Store.getState().query;
+
+    const fuseResults = _db ? fuse.search(q) : [];
 
     _db ? console.log("Fuse results: ", fuseResults) : console.log("");
 
@@ -75,10 +75,19 @@ export const Form = () => {
                     />
 
                     <div className="flex-container results">
-                        {fuseResults ? fuseResults.map(o => <pre>{o.toString()}</pre>) : []}
+                        {
+                            fuseResults.map(o => <pre>
+                                <p>{o.section.toUpperCase()}</p>
+                                <ul>{o.entries.filter(e => e.toLowerCase().indexOf(q.toLowerCase()) > -1).map(e => <li><a href="/#">{e}</a></li>)}</ul>
+                            </pre>
+                            )
+                        }
+                        {/* {
+                            fuseResults.map(o => <pre>{o.section.toUpperCase() + "\n" + o.entries.filter(e => e.toLowerCase().indexOf(q.toLowerCase()) > -1)}</pre>)
+                        } */}
                     </div>
                 </form>
             }
-        </StoreContext.Consumer>
+        </StoreContext.Consumer >
     )
 }
