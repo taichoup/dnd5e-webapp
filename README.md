@@ -15,3 +15,9 @@ UPDATE: now the main search returns links to the api. If clicking those links co
 ### Network calls
 
 Try using fetch instead of Axios
+
+### A lire
+
+- https://reactjs.org/docs/hooks-effect.html
+- https://reactjs.org/docs/hooks-rules.html
+- https://reactjs.org/docs/hooks-custom.html
