@@ -5,16 +5,6 @@ import axios from 'axios';
 import Fuse from 'fuse.js';
 
 
-// const loadData = () => import('./components/data2.json');
-
-// loadData()
-//     .then(
-//         (data) => {
-//             console.log("HELLO", data);
-//         }
-//     );
-
-
 function handleUserInput(event) {
     _Store.dispatch({ type: "QUERY", payload: event.target.value })
 }
