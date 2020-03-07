@@ -10,6 +10,7 @@ For now, I call it with axios from the public folder (which means at least that 
 ### Routing
 
 Should probably make a page with network calls for the sections, on top of the existing page with the search bar?
+UPDATE: now the main search returns links to the api. If clicking those links could trigger a request and display the response that would be dope.
 
 ### Network calls
 

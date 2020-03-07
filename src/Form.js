@@ -33,25 +33,8 @@ export const Form = () => {
             const response = await axios.get(
                 `/data2.json`
             );
-            // console.log("AXIOS: %o", response);
             _Store.dispatch({ type: "GETDATA_DB", payload: response.data });
             const db_light = response.data.map(o => { return { section: o.section, entries: o.results.map(o => o.result.name) } }).filter(e => e != null).filter(e => e.section !== "spellcasting" && e.section !== "starting-equipment");
-            // const db_light_with_endpoints = response.data.map(
-            //     o => {
-            //         return {
-            //             section: o.section,
-            //             entries: o.results.map(
-            //                 o => {
-            //                     return {
-            //                         name: o.result.name,
-            //                         url: o.result.url
-            //                     }
-            //                 }
-            //             )
-            //         }
-            //     }
-            // );
-            // _Store.dispatch({ type: "GETDATA_DB", payload: db_light_with_endpoints });
             _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
         })();
         return () => {
@@ -93,7 +76,6 @@ export const Form = () => {
                             fuseResults.map(o => <pre>
                                 <p>{o.section.toUpperCase()}</p>
                                 <ul>{o.entries.filter(e => e.toLowerCase().indexOf(q.toLowerCase()) > -1).map(e => <li><a href={generatePath(o.section, e)}>{e}</a></li>)}</ul>
-                                {/* <ul>{o.entries.filter(e => e.name.toLowerCase().indexOf(q.toLowerCase()) > -1).map(e => <li><a href={e.url}>{e}</a></li>)}</ul> */}
                             </pre>
                             )
                         }
