@@ -21,3 +21,14 @@ Try using fetch instead of Axios
 - https://reactjs.org/docs/hooks-effect.html
 - https://reactjs.org/docs/hooks-rules.html
 - https://reactjs.org/docs/hooks-custom.html
+
+- https://medium.com/better-programming/how-to-fetch-data-from-an-api-with-react-hooks-9e7202b8afcd
+- https://github.com/mdn/fetch-examples/blob/master/fetch-json/index.html
+- https://sabe.io/tutorials/how-to-create-modal-popup-box
+
+### Comments from Etienne the React instructor
+
+- no need to have the db in the state (heavy) --> service worker?
+- debounce ? (not on every hit)
+- search button ?
+- service worker (separate thread)

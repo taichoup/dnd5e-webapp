@@ -1,35 +1,33 @@
 import './App.css';
 import React from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { _Store } from './Store';
 import StoreContext from "./StoreContext";
-import { Results } from './Results'
-import { NavItem } from './NavItem';
 import { Form } from './Form';
 ;
 
 function App() {
 
-  const currentSection = _Store.getState().section;
+  // const currentSection = _Store.getState().section;
 
   // EFFECT
-  React.useEffect(() => {
-    _Store.dispatch({ type: "GETDATA", payload: null });
-    let canceled = false;
-    (async () => {
-      const response = await axios.get(
-        `http://www.dnd5eapi.co/api/${currentSection}`
-      );
+  // React.useEffect(() => {
+  //   _Store.dispatch({ type: "GETDATA", payload: null });
+  //   let canceled = false;
+  //   (async () => {
+  //     const response = await axios.get(
+  //       `http://www.dnd5eapi.co/api/${currentSection}`
+  //     );
 
-      // console.log("AXIOS: %o", response);
-      if (!canceled) {
-        _Store.dispatch({ type: "GETDATA_API", payload: response.data.results });
-      }
-    })();
-    return () => {
-      canceled = true;
-    };
-  }, [currentSection]);
+  //     // console.log("AXIOS: %o", response);
+  //     if (!canceled) {
+  //       _Store.dispatch({ type: "GETDATA_API", payload: response.data.results });
+  //     }
+  //   })();
+  //   return () => {
+  //     canceled = true;
+  //   };
+  // }, [currentSection]);
 
 
   //APP STRUCTURE
