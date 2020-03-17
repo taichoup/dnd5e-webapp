@@ -1,19 +1,16 @@
-import './App.css';
-import React from 'react';
+import "./App.css";
+import React from "react";
 import StoreContext from "./StoreContext";
-import { Form } from './Form';
-import { Popup } from './Popup';
-;
-
+import { Form } from "./Form";
+// import { Popup } from "./Popup";
 function App() {
-
   return (
     <StoreContext.Consumer>
       {store => (
         <div className="flex-container">
-          <Popup />
+          {/* <Popup /> */}
           <Form />
-        </div >
+        </div>
       )}
     </StoreContext.Consumer>
   );

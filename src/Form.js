@@ -3,6 +3,7 @@ import StoreContext from "./StoreContext";
 import { _Store } from "./Store";
 import axios from "axios";
 import Fuse from "fuse.js";
+import { Popup } from "./Popup";
 
 // UTILS ----------------------------------------------------------------
 
@@ -22,8 +23,9 @@ const options = {
 
 function showPopup(path) {
   console.log("%cSHOWING POPUP with path = %s", "color:red", path);
-  document.getElementById("modal").style.display = "block";
+  //   document.getElementById("modal").style.display = "block";
   _Store.dispatch({ type: "CLICK", payload: path });
+  return <Popup />;
 }
 
 function generatePath(section, name) {
@@ -70,7 +72,7 @@ export const Form = () => {
   const q = _Store.getState().query;
   const fuseResults = _db ? fuse.search(q) : [];
 
-  _db ? console.log("Fuse results: ", fuseResults) : console.log("");
+  //   _db ? console.log("Fuse results: ", fuseResults) : console.log("");
 
   // RENDER -------------------------------------------------------------
 
@@ -108,6 +110,7 @@ export const Form = () => {
                 </ul>
               </pre>
             ))}
+            {_Store.getState().click && <Popup />}
           </div>
         </form>
       )}
