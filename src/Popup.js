@@ -37,7 +37,12 @@ export const Popup = () => {
     //     </tbody>
     //   </table>
     // );
-    return <JsonToTable json={results} />;
+    return (
+      <div>
+        <h2>{results.name}</h2>
+        <JsonToTable json={results} />
+      </div>
+    );
   }
 
   return (
