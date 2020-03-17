@@ -23,6 +23,13 @@ export const Popup = () => {
   }
 
   function formatResults(results) {
+    const filteredResults = Object.keys(results)
+      .filter(k => k !== "_id" && k !== "index" && k !== "name" && k !== "url")
+      .reduce((obj, key) => {
+        obj[key] = results[key];
+        return obj;
+      }, {});
+
     // return (
     //   <table>
     //     <tbody>
@@ -40,7 +47,7 @@ export const Popup = () => {
     return (
       <div>
         <h2>{results.name}</h2>
-        <JsonToTable json={results} />
+        <JsonToTable json={filteredResults} />
       </div>
     );
   }

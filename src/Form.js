@@ -22,8 +22,6 @@ const options = {
 };
 
 function showPopup(path) {
-  console.log("%cSHOWING POPUP with path = %s", "color:red", path);
-  //   document.getElementById("modal").style.display = "block";
   _Store.dispatch({ type: "CLICK", payload: path });
   return <Popup />;
 }
