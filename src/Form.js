@@ -1,6 +1,7 @@
 import React from 'react';
 import StoreContext from './StoreContext';
 import { _Store } from './Store';
+import { Popup } from './Popup';
 import axios from 'axios';
 import Fuse from 'fuse.js';
 
@@ -19,22 +20,25 @@ const options = {
     keys: ["entries"]
 };
 
-
-// COMMENTS FROM THE REACT TRAINER:
-// no need to have the db in the state (heavy) --> service worker?
-// debounce ? (not on every hit)
-// search button ? 
-// service worker (separate thread)
-
 export const Form = () => {
+
+    const showPopup = (path) => {
+        _Store.dispatch({ type: "CLICK", payload: path });  
+    }
+
+    const closePopup = () => {
+        _Store.dispatch({type: "CLICK", payload: ""});
+    }
 
     React.useEffect(() => {
         (async () => {
             const response = await axios.get(
                 `/data2.json`
             );
-            _Store.dispatch({ type: "GETDATA_DB", payload: response.data });
-            const db_light = response.data.map(o => { return { section: o.section, entries: o.results.map(o => o.result.name) } }).filter(e => e != null).filter(e => e.section !== "spellcasting" && e.section !== "starting-equipment");
+            const db_light = response.data
+                .map(o => { return { section: o.section, entries: o.results.map(o => o.result.name) }})
+                .filter(e => e != null)
+                .filter(e => e.section !== "spellcasting" && e.section !== "starting-equipment");
             _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
         })();
         return () => {
@@ -42,11 +46,8 @@ export const Form = () => {
     }, []);
 
     const fuse = new Fuse(_Store.getState().db, options);
-
     const _db = _Store.getState().db;
-
     const q = _Store.getState().query;
-
     const fuseResults = _db ? fuse.search(q) : [];
 
     _db ? console.log("Fuse results: ", fuseResults) : console.log("");
@@ -75,9 +76,14 @@ export const Form = () => {
                         {
                             fuseResults.map(o => <pre>
                                 <p>{o.section.toUpperCase()}</p>
-                                <ul>{o.entries.filter(e => e.toLowerCase().indexOf(q.toLowerCase()) > -1).map(e => <li><a href={generatePath(o.section, e)}>{e}</a></li>)}</ul>
+                                <ul>{o.entries.filter(e => e.toLowerCase().indexOf(q.toLowerCase()) > -1).map(e => <li>
+                                    <button onClick={() => showPopup(generatePath(o.section, e))}>{e}</button>
+                                </li>)}</ul>
                             </pre>
                             )
+                        }
+                        {
+                            _Store.getState().popup ? <Popup path={_Store.getState().popupdata} close={closePopup()} /> : null
                         }
                     </div>
                 </form>
