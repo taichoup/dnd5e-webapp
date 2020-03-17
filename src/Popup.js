@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { _Store } from "./Store";
 import StoreContext from "./StoreContext";
+import { JsonToTable } from "react-json-to-table";
 
 export const Popup = () => {
   useEffect(() => {
@@ -22,20 +23,21 @@ export const Popup = () => {
   }
 
   function formatResults(results) {
-    return (
-      <table>
-        <tbody>
-          {Object.keys(results)
-            .map(k => (
-              <tr>
-                <td>{typeof k === "object" ? Object.keys(k) : k}</td>
-                <td>{results[k]}</td>
-              </tr>
-            ))
-            .filter(k => k !== "index")}
-        </tbody>
-      </table>
-    );
+    // return (
+    //   <table>
+    //     <tbody>
+    //       {Object.keys(results)
+    //         .map(k => (
+    //           <tr>
+    //             <td>{typeof k === "object" ? Object.keys(k) : k}</td>
+    //             <td>{results[k]}</td>
+    //           </tr>
+    //         ))
+    //         .filter(k => k !== "index")}
+    //     </tbody>
+    //   </table>
+    // );
+    return <JsonToTable json={results} />;
   }
 
   return (
