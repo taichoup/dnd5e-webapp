@@ -32,5 +32,3 @@ Try using fetch instead of Axios
 - debounce ? (not on every hit)
 - search button ?
 - service worker (separate thread)
-
-### Test
