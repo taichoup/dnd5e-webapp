@@ -18,7 +18,7 @@ const options = {
   distance: 100,
   maxPatternLength: 32,
   minMatchCharLength: 3,
-  keys: ["entries"]
+  keys: ["entries"],
 };
 
 function showPopup(path) {
@@ -47,15 +47,15 @@ export const Form = () => {
     (async () => {
       const response = await axios.get(`/data2.json`);
       const db_light = response.data
-        .map(o => {
+        .map((o) => {
           return {
             section: o.section,
-            entries: o.results.map(o => o.result.name)
+            entries: o.results.map((o) => o.result.name),
           };
         })
-        .filter(e => e != null)
+        .filter((e) => e != null)
         .filter(
-          e =>
+          (e) =>
             e.section !== "spellcasting" && e.section !== "starting-equipment"
         );
       _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
@@ -76,7 +76,7 @@ export const Form = () => {
 
   return (
     <StoreContext.Consumer>
-      {store => (
+      {(store) => (
         <form className="form">
           <input
             type="text"
@@ -87,15 +87,19 @@ export const Form = () => {
             value={_Store.getState().query}
             autofocus="true"
           />
+          <br />
+          <span class="hint"> Press tab to iterate over results</span>
 
           <div className="flex-container results">
-            {fuseResults.map(o => (
+            {fuseResults.map((o) => (
               <pre>
                 <p>{o.section.toUpperCase()}</p>
                 <ul>
                   {o.entries
-                    .filter(e => e.toLowerCase().indexOf(q.toLowerCase()) > -1)
-                    .map(e => (
+                    .filter(
+                      (e) => e.toLowerCase().indexOf(q.toLowerCase()) > -1
+                    )
+                    .map((e) => (
                       <li>
                         <a
                           href="/#"

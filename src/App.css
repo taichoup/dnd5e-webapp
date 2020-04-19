@@ -133,3 +133,14 @@ a:focus {
   text-decoration: none;
   cursor: pointer;
 }
+
+.hint {
+  font-size: small;
+  color: #888;
+  font-style: italic;
+  margin-left: 5px;
+}
+
+pre > p {
+  margin-left: 10px;
+}
