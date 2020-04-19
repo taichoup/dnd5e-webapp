@@ -87,8 +87,6 @@ export const Form = () => {
             value={_Store.getState().query}
             autofocus="true"
           />
-          <br />
-          <span class="hint"> Press tab to iterate over results</span>
 
           <div className="flex-container results">
             {fuseResults.map((o) => (
