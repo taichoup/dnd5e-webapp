@@ -11,10 +11,24 @@ export const Popup = () => {
       const res = await fetch(statePath); // For the hook to work we need to wrap the fetch in an async...await thing.
       res
         .json()
-        .then(res => _Store.dispatch({ type: "GETDATA_POPUP", payload: res }))
-        .catch(error => console.log(error.message));
+        .then((res) => _Store.dispatch({ type: "GETDATA_POPUP", payload: res }))
+        .catch((error) => console.log(error.message));
     }
     fetchData();
+  }, []);
+
+  // close popup by pressing Esc.
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.keyCode === 27) {
+        closePopup();
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
   }, []);
 
   function closePopup() {
@@ -24,26 +38,14 @@ export const Popup = () => {
 
   function formatResults(results) {
     const filteredResults = Object.keys(results)
-      .filter(k => k !== "_id" && k !== "index" && k !== "name" && k !== "url")
+      .filter(
+        (k) => k !== "_id" && k !== "index" && k !== "name" && k !== "url"
+      )
       .reduce((obj, key) => {
         obj[key] = results[key];
         return obj;
       }, {});
 
-    // return (
-    //   <table>
-    //     <tbody>
-    //       {Object.keys(results)
-    //         .map(k => (
-    //           <tr>
-    //             <td>{typeof k === "object" ? Object.keys(k) : k}</td>
-    //             <td>{results[k]}</td>
-    //           </tr>
-    //         ))
-    //         .filter(k => k !== "index")}
-    //     </tbody>
-    //   </table>
-    // );
     return (
       <div>
         <h2>{results.name}</h2>
@@ -54,7 +56,7 @@ export const Popup = () => {
 
   return (
     <StoreContext.Consumer>
-      {store => (
+      {(store) => (
         <div className="modal" id="modal">
           <div className="modal-content">
             <button className="close-button" onClick={() => closePopup()}>
