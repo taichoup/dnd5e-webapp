@@ -92,6 +92,10 @@ input {
   padding: 10px 32px 10px 10px;
 }
 
+a:focus {
+  background-color: yellow;
+}
+
 /* The Modal (background) */
 .modal {
   position: fixed; /* Stay in place */
