@@ -2,13 +2,12 @@ import "./App.css";
 import React from "react";
 import StoreContext from "./StoreContext";
 import { Form } from "./Form";
-// import { Popup } from "./Popup";
+
 function App() {
   return (
     <StoreContext.Consumer>
-      {store => (
+      {(store) => (
         <div className="flex-container">
-          {/* <Popup /> */}
           <Form />
         </div>
       )}
@@ -16,4 +15,4 @@ function App() {
   );
 }
 
-export default App; // imported into index.js for render
+export default App;
