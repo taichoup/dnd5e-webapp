@@ -137,3 +137,25 @@ a:focus {
 pre > p {
   margin-left: 10px;
 }
+
+.battle-form {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.battle-form input {
+  height: 2.5em;
+  margin: 1em 0.2em;
+  width: 30%;
+}
+
+.battle-form button {
+  margin: 0.2em;
+  height: 2.5em;
+  align-self: center;
+}
+
+.battle-table {
+  color: white;
+  width: 100%;
+}
