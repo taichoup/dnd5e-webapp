@@ -36,7 +36,10 @@ function generatePath(section, name) {
     .toLowerCase()
     .replace(/'s/g, "s")
     .replace(/ /g, "-")
-    .replace(/:/g, "");
+    .replace(/:/g, "")
+    .replace(/[()]/g, "")
+    .replace(/,/g, "")
+    .replace(/\//g, "-");
   return `http://www.dnd5eapi.co/api/${section}/${name}`;
 }
 
