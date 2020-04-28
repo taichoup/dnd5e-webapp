@@ -18,6 +18,8 @@ const reducer = (state, action) => {
     payload.id = uuidv4();
     state.battle.push(payload);
     console.log(state.battle);
+  } else if (type === "RESET_BATTLE") {
+    state.battle = [];
   }
   return state;
 };

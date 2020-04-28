@@ -16,11 +16,19 @@ function handleUserInput(event) {
   });
   event.preventDefault();
   event.target.reset();
+  document.getElementById("creature").focus();
 }
 
 function initiative(a, b) {
-  return a.initiative_roll - b.initiative_roll;
+  return b.initiative_roll - a.initiative_roll;
 }
+
+// function rollInitiative(event) {
+//   event.preventDefault();
+//   let roll = 0;
+//   roll += event.deltaY;
+//   event.target.value = roll;
+// }
 
 export const Battle = (props) => {
   return (
@@ -28,11 +36,17 @@ export const Battle = (props) => {
       {(store) => (
         <div>
           <form className="pure-form battle-form" onSubmit={handleUserInput}>
-            <input type="text" name="creature_name" placeholder="Name" />
+            <input
+              type="text"
+              name="creature_name"
+              placeholder="Name"
+              id="creature"
+            />
             <input
               type="text"
               name="initiative_roll"
               placeholder="Initiative roll"
+              // onWheel={rollInitiative}
             />
             <input type="text" name="hit_points" placeholder="Hit points" />
             <button type="submit" className="pure-button pure-button-primary">
@@ -57,11 +71,24 @@ export const Battle = (props) => {
                   <td>{_Store.getState().battle.indexOf(item) + 1}</td>
                   <td>{item.creature_name}</td>
                   <td>{item.initiative_roll}</td>
-                  <td>{item.hit_points}</td>
-                  <td>STATE (input here)</td>
+                  <td>
+                    <div contentEditable>{item.hit_points}</div>
+                  </td>
+                  <td>
+                    <div contentEditable>-</div>
+                  </td>
                 </tr>
               ))}
           </table>
+          <div className="battle-reset">
+            <button
+              type="submit"
+              className="pure-button"
+              onClick={() => _Store.dispatch({ type: "RESET_BATTLE" })}
+            >
+              Reset table
+            </button>
+          </div>
         </div>
       )}
     </StoreContext.Consumer>

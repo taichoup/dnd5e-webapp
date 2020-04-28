@@ -159,3 +159,37 @@ pre > p {
   color: white;
   width: 100%;
 }
+
+.battle-reset {
+  display: flex;
+}
+
+.battle-reset button {
+  margin: 1em auto;
+  color: red;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+}
+
+nav > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  display: inline;
+  margin-right: 1em;
+  margin-left: 0.2em;
+}
+
+.nav-item > a {
+  color: white;
+}
+
+#query-field {
+  margin-top: 1em;
+}

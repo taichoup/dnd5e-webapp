@@ -33,6 +33,8 @@ export const Popup = () => {
 
   function closePopup() {
     document.getElementById("modal").style.display = "none";
+    document.getElementById("query-field").focus();
+    document.getElementById("query-field").select();
     _Store.dispatch({ type: "CLICK", payload: "" });
   }
 
