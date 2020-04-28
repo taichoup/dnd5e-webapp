@@ -3,7 +3,8 @@
 ### Popups
 
 - Better UI for the popups
-- Fix the bugs
+- Fix the bugs (WIP)
+- Don't display rows with empty values
 
 ### API
 
