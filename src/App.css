@@ -190,6 +190,10 @@ nav > ul {
   color: white;
 }
 
+.nav-item > a:focus {
+  color: red;
+}
+
 #query-field {
   margin-top: 1em;
 }
