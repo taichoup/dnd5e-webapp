@@ -40,7 +40,7 @@ function generatePath(section, name) {
     .replace(/[()]/g, "")
     .replace(/,/g, "")
     .replace(/\//g, "-");
-  return `http://www.dnd5eapi.co/api/${section}/${name}`;
+  return `https://www.dnd5eapi.co/api/${section}/${name}`;
 }
 
 export const Form = () => {
