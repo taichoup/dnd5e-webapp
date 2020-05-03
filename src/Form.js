@@ -63,7 +63,7 @@ export const Form = () => {
         );
       _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
     })();
-    return () => {};
+    return () => { };
   }, []);
 
   // SEARCH -------------------------------------------------------------
@@ -88,7 +88,7 @@ export const Form = () => {
             placeholder="Type your query here..."
             onChange={handleUserInput}
             value={_Store.getState().query}
-            autofocus="true"
+            autoFocus
           />
 
           <div className="flex-container results">
