@@ -91,9 +91,7 @@ export const JsonToTable = (props) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <div className="td_row_even">
-                                                    {data[c]}
-                                                </div>
+                                                {data[c] ? <div className="td_row_even">{data[c]}</div> : null}
                                             </td>
                                         </tr>
 
