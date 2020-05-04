@@ -1,0 +1,101 @@
+.fill,
+body,
+html {
+  height: 100%;
+}
+
+.td_head,
+.td_row_even,
+.td_row_odd {
+  font-size: small;
+}
+
+.navbar-header,
+.navbar-nav,
+.navbar-nav > li,
+.td_head {
+  float: left;
+}
+
+.fill {
+  min-height: 100%;
+}
+
+.top_size {
+  height: 51px;
+}
+
+#all_panels {
+  height: 100%;
+  min-height: 100%;
+}
+
+#aboutLnk {
+  position: fixed;
+  right: 10px;
+  top: 15px;
+}
+
+#inner_text {
+  display: block;
+  position: absolute;
+  height: auto;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-top: 51px;
+  margin-bottom: 0;
+}
+
+#inner_tbl {
+  padding-left: 2px;
+}
+
+.td_row_even {
+  padding: 2px;
+  background-color: #f6f4f0;
+}
+
+.td_row_odd {
+  padding: 2px;
+  background-color: #fff;
+}
+
+.td_head {
+  padding: 2px;
+  font-weight: 700;
+}
+
+input,
+p,
+select,
+td,
+textarea,
+th {
+  font-size: 1em;
+}
+
+table,
+td,
+th {
+  border: 1px solid gray;
+}
+
+table {
+  font-size: 100%;
+}
+
+.api-results {
+  background-color: #e8e8e8;
+}
+
+.api-results table {
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.small-table {
+  width: calc(100% - 0.2em);
+  margin: 1.5em 0.1em 0.1em 0.1em;
+}
