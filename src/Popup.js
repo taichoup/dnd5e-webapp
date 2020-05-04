@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect } from "react";
 import { _Store } from "./Store";
 import StoreContext from "./StoreContext";
-// import { JsonToTable } from "react-json-to-table";
 import { JsonToTable } from "./JsonToTable";
 
 export const Popup = () => {
