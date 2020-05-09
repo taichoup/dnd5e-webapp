@@ -119,6 +119,7 @@ a:focus {
   float: right;
   font-size: 28px;
   margin-top: 15px;
+  font: Arial;
 }
 
 .close-button:hover,
