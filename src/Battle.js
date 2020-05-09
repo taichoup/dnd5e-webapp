@@ -44,8 +44,12 @@ export const Battle = (props) => {
               <option value="" disabled selected>
                 Team
               </option>
-              <option style={{ color: "blue" }}>Blue</option>
-              <option style={{ color: "red" }}>Red</option>
+              <option style={{ color: "blue" }} value="Blue">
+                PCs
+              </option>
+              <option style={{ color: "red" }} value="Red">
+                Enemies
+              </option>
             </select>
             <input
               type="text"
