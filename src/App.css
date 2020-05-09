@@ -33,8 +33,7 @@
   flex-direction: column;
   justify-content: space-evenly;
   padding: 10px;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin: auto;
   width: 80%;
   max-width: 80%;
 }
@@ -42,13 +41,6 @@
 .results a:hover {
   font-weight: bold;
   flex-wrap: wrap;
-}
-
-.result {
-  /* width: 300px; */
-  /* height: 600px; */
-  /* overflow: hidden; */
-  /* margin: 10px; */
 }
 
 .result img {
