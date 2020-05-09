@@ -150,6 +150,16 @@ pre > p {
   width: 30%;
 }
 
+.battle-form select {
+  height: 2.5em;
+  margin: 1em 0.2em;
+  color: gray;
+}
+
+.battle-form select[value="Blue"] {
+  color: blue;
+}
+
 .battle-form button {
   margin: 0.2em;
   height: 2.5em;
@@ -197,4 +207,43 @@ nav > ul {
 
 #query-field {
   margin-top: 1em;
+}
+
+#battleground {
+  background-color: darkgray;
+  flex-direction: column;
+  /* align-items: start; */
+  width: 50%;
+  height: 20em;
+  margin: 1em auto auto auto;
+}
+
+.avatar {
+  display: block;
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  color: white;
+  text-align: center;
+  cursor: crosshair;
+  box-sizing: border-box;
+}
+
+.avatar:hover {
+  border: 0.1em solid white;
+}
+
+.avatar-red {
+  background-color: darkred;
+  float: right;
+}
+
+.avatar-blue {
+  background-color: darkblue;
+  float: left;
+}
+
+.avatar-label {
+  margin-top: 0.2em;
+  cursor: crosshair;
 }
