@@ -68,54 +68,58 @@ export const Battle = (props) => {
               ADD
             </button>
           </form>
-          <table className="pure-table battle-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Initiative</th>
-                <th>HP</th>
-                <th>State</th>
-              </tr>
-            </thead>
-            {_Store
-              .getState()
-              .battle.sort(initiative)
-              .map((item) => (
-                <tr>
-                  <td>{_Store.getState().battle.indexOf(item) + 1}</td>
-                  <td>{item.creature_name}</td>
-                  <td>{item.initiative_roll}</td>
-                  <td>
-                    <div contentEditable>{item.hit_points}</div>
-                  </td>
-                  <td>
-                    <div contentEditable>-</div>
-                  </td>
-                </tr>
-              ))}
-          </table>
+          {_Store.getState().battle.length >= 1 && (
+            <>
+              <table className="pure-table battle-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Initiative</th>
+                    <th>HP</th>
+                    <th>State</th>
+                  </tr>
+                </thead>
+                {_Store
+                  .getState()
+                  .battle.sort(initiative)
+                  .map((item) => (
+                    <tr>
+                      <td>{_Store.getState().battle.indexOf(item) + 1}</td>
+                      <td>{item.creature_name}</td>
+                      <td>{item.initiative_roll}</td>
+                      <td>
+                        <div contentEditable>{item.hit_points}</div>
+                      </td>
+                      <td>
+                        <div contentEditable>-</div>
+                      </td>
+                    </tr>
+                  ))}
+              </table>
 
-          <div id="battleground">
-            <div className="grid-container">
-              {_Store.getState().battle.map((item) => (
-                <Avatar
-                  name={generateAvatarName(item.creature_name)}
-                  team={item.team}
-                />
-              ))}
-            </div>
-          </div>
+              <div id="battleground">
+                <div className="grid-container">
+                  {_Store.getState().battle.map((item) => (
+                    <Avatar
+                      name={generateAvatarName(item.creature_name)}
+                      team={item.team}
+                    />
+                  ))}
+                </div>
+              </div>
 
-          <div className="battle-reset">
-            <button
-              type="submit"
-              className="pure-button"
-              onClick={() => _Store.dispatch({ type: "RESET_BATTLE" })}
-            >
-              Reset battle
-            </button>
-          </div>
+              <div className="battle-reset">
+                <button
+                  type="submit"
+                  className="pure-button"
+                  onClick={() => _Store.dispatch({ type: "RESET_BATTLE" })}
+                >
+                  Reset battle
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
     </StoreContext.Consumer>
