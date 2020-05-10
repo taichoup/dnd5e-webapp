@@ -40,6 +40,12 @@ export const Battle = (props) => {
       {(store) => (
         <div>
           <form className="pure-form battle-form" onSubmit={handleUserInput}>
+            <input
+              type="text"
+              name="creature_name"
+              placeholder="Name"
+              id="creature"
+            />
             <select name="team">
               <option value="" disabled selected>
                 Team
@@ -51,12 +57,6 @@ export const Battle = (props) => {
                 Enemies
               </option>
             </select>
-            <input
-              type="text"
-              name="creature_name"
-              placeholder="Name"
-              id="creature"
-            />
             <input
               type="text"
               name="initiative_roll"
