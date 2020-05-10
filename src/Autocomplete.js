@@ -139,6 +139,10 @@ class Autocomplete extends Component {
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={userInput}
+          id="creature"
+          placeholder="Name"
+          name="creature_name"
+          autoComplete="off"
         />
         {suggestionsListComponent}
       </Fragment>
