@@ -46,7 +46,7 @@ export const Battle = (props) => {
               placeholder="Name"
               id="creature"
             />
-            <select name="team">
+            <select name="team" required>
               <option value="" disabled selected>
                 Team
               </option>
@@ -99,7 +99,7 @@ export const Battle = (props) => {
               </table>
 
               <div id="battleground">
-                <div className="grid-container">
+                <div>
                   {_Store.getState().battle.map((item) => (
                     <Avatar
                       name={generateAvatarName(item.creature_name)}
