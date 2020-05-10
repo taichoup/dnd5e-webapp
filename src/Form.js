@@ -63,7 +63,7 @@ export const Form = () => {
         );
       _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
     })();
-    return () => { };
+    return () => {};
   }, []);
 
   // SEARCH -------------------------------------------------------------
@@ -83,7 +83,6 @@ export const Form = () => {
         <form className="form">
           <input
             type="text"
-            className="input"
             id="query-field"
             placeholder="Type your query here..."
             onChange={handleUserInput}
