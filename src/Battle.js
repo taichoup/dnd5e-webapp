@@ -2,6 +2,7 @@ import React from "react";
 import StoreContext from "./StoreContext";
 import { _Store } from "./Store";
 import { Avatar } from "./Avatar";
+import Autocomplete from "./Autocomplete";
 
 function handleUserInput(event) {
   const creature_name = event.target["creature_name"].value;
@@ -34,18 +35,46 @@ function generateAvatarName(avatarName) {
 //   // use the mouse wheel in loose mode ?
 // }
 
+const getModifier = (abilityScore) => {
+  return Math.floor((abilityScore - 10) / 2);
+};
+
+const db = _Store.getState().db ? _Store.getState().db : null;
+
+const monsters = db
+  ? db.filter((item) => item.section === "monsters")[0].results
+  : null;
+
+const monstersInitHPDB = db
+  ? monsters.map((monster) => {
+      return {
+        label: monster.result.name,
+        dex: monster.result.dexterity,
+        modifier: getModifier(monster.result.dexterity),
+        hp: monster.result.hit_points,
+      };
+    })
+  : null;
+
 export const Battle = (props) => {
   return (
     <StoreContext.Consumer>
       {(store) => (
         <div>
           <form className="pure-form battle-form" onSubmit={handleUserInput}>
-            <input
+            {/* <input
               type="text"
               name="creature_name"
               placeholder="Name"
               id="creature"
+            /> */}
+
+            <Autocomplete
+              suggestions={
+                db ? monstersInitHPDB.map((entry) => entry.label) : []
+              }
             />
+
             <select name="team" required>
               <option value="" disabled selected>
                 Team
