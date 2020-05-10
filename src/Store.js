@@ -28,6 +28,7 @@ const reducer = (state, action) => {
 // on any state change
 export const _Store = createStore(reducer, {
   query: "",
+  db: null,
   popupdata: null,
   click: false,
   path: "",
