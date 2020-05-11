@@ -64,6 +64,7 @@ class Autocomplete extends Component {
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13) {
+      e.preventDefault();
       this.setState({
         activeSuggestion: 0,
         showSuggestions: false,
@@ -145,6 +146,7 @@ class Autocomplete extends Component {
             placeholder="Name"
             name="creature_name"
             autoComplete="off"
+            autoFocus
           />
           {suggestionsListComponent}
         </div>
