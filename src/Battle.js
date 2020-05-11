@@ -44,6 +44,11 @@ function generateAvatarName(avatarName) {
   return avatarName.slice(0, 2);
 }
 
+function resetBattle() {
+  _Store.dispatch({ type: "RESET_BATTLE" });
+  document.getElementById("creature").value = "";
+}
+
 // function rollInitiative() {
 //   // use the mouse wheel in loose mode ?
 // }
@@ -2006,7 +2011,7 @@ export const Battle = (props) => {
             />
 
             <select name="team" required>
-              <option value="" disabled selected>
+              <option value="" disabled defaultValue>
                 Team
               </option>
               <option style={{ color: "blue" }} value="Blue">
@@ -2039,6 +2044,8 @@ export const Battle = (props) => {
                     <th>State</th>
                   </tr>
                 </thead>
+                <tbody>
+
                 {_Store
                   .getState()
                   .battle.sort(initiative)
@@ -2048,13 +2055,14 @@ export const Battle = (props) => {
                       <td>{item.creature_name}</td>
                       <td>{item.initiative_roll}</td>
                       <td>
-                        <div contentEditable>{item.hit_points}</div>
+                        <div contentEditable suppressContentEditableWarning={true}>{item.hit_points}</div>
                       </td>
                       <td>
-                        <div contentEditable>-</div>
+                        <div contentEditable suppressContentEditableWarning={true}>-</div>
                       </td>
                     </tr>
                   ))}
+                </tbody>
               </table>
 
               <div id="battleground">
@@ -2072,7 +2080,7 @@ export const Battle = (props) => {
                 <button
                   type="submit"
                   className="pure-button"
-                  onClick={() => _Store.dispatch({ type: "RESET_BATTLE" })}
+                  onClick={resetBattle}
                 >
                   Reset battle
                 </button>
