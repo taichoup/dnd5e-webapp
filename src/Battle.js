@@ -46,7 +46,7 @@ function generateAvatarName(avatarName) {
 
 function resetBattle() {
   _Store.dispatch({ type: "RESET_BATTLE" });
-  document.getElementById("creature").value = "";
+  document.getElementById("creature").select();
 }
 
 // function rollInitiative() {
@@ -1998,20 +1998,14 @@ export const Battle = (props) => {
     <StoreContext.Consumer>
       {(store) => (
         <div>
-          <form className="pure-form battle-form" onSubmit={handleUserInput}>
-            {/* <input
-              type="text"
-              name="creature_name"
-              placeholder="Name"
-              id="creature"
-            /> */}
+          <form className="pure-form battle-form" onSubmit={handleUserInput} id="battleInput">
             
             <Autocomplete
               suggestions={monstersInitHPDB.map((entry) => entry.label)}
             />
 
-            <select name="team" required>
-              <option value="" disabled defaultValue>
+            <select name="team" required defaultValue="">
+              <option value="" disabled>
                 Team
               </option>
               <option style={{ color: "blue" }} value="Blue">
@@ -2078,7 +2072,7 @@ export const Battle = (props) => {
 
               <div className="battle-reset">
                 <button
-                  type="submit"
+                  type="reset"
                   className="pure-button"
                   onClick={resetBattle}
                 >
