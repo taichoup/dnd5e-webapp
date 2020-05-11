@@ -1,5 +1,8 @@
 ## ROADMAP
 
+- Automated intiative and initial HP for monsters
+- Optional battleground grid with adjustable scale and grid snap for avatars
+
 ### Popups
 
 - Better UI for the popups
