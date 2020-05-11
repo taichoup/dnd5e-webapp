@@ -129,22 +129,25 @@ class Autocomplete extends Component {
             <em>No suggestions, you're on your own!</em>
           </div>
         );
+        // suggestionsListComponent = null;
       }
     }
 
     return (
       <Fragment>
-        <input
-          type="text"
-          onChange={onChange}
-          onKeyDown={onKeyDown}
-          value={userInput}
-          id="creature"
-          placeholder="Name"
-          name="creature_name"
-          autoComplete="off"
-        />
-        {suggestionsListComponent}
+        <div className="holder">
+          <input
+            type="text"
+            onChange={onChange}
+            onKeyDown={onKeyDown}
+            value={userInput}
+            id="creature"
+            placeholder="Name"
+            name="creature_name"
+            autoComplete="off"
+          />
+          {suggestionsListComponent}
+        </div>
       </Fragment>
     );
   }

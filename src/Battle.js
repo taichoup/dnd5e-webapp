@@ -4,6 +4,10 @@ import { _Store } from "./Store";
 import { Avatar } from "./Avatar";
 import Autocomplete from "./Autocomplete";
 
+/*
+* Main event handler for the battle form
+* @param {event object}
+*/
 function handleUserInput(event) {
   const creature_name = event.target["creature_name"].value;
   const initiative_roll = event.target["initiative_roll"].value;
@@ -23,10 +27,19 @@ function handleUserInput(event) {
   document.getElementById("creature").focus();
 }
 
+/*
+* Sort function for the battle order table
+* @param {int} a
+* @param {int} b
+*/
 function initiative(a, b) {
   return b.initiative_roll - a.initiative_roll;
 }
 
+/*
+* Generate the label for the little avatars on the battleground
+* @param {string} avatarName - either free text from user or autocomplete result
+*/
 function generateAvatarName(avatarName) {
   return avatarName.slice(0, 2);
 }
@@ -39,6 +52,7 @@ const getModifier = (abilityScore) => {
   return Math.floor((abilityScore - 10) / 2);
 };
 
+// TODO: retrieve this dynamically?? should profile the perfs
 const monstersInitHPDB = [
   {
     label: "Aboleth",
@@ -1986,7 +2000,7 @@ export const Battle = (props) => {
               placeholder="Name"
               id="creature"
             /> */}
-
+            
             <Autocomplete
               suggestions={monstersInitHPDB.map((entry) => entry.label)}
             />
