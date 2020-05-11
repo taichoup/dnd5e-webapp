@@ -44,6 +44,11 @@ function generateAvatarName(avatarName) {
   return avatarName.slice(0, 2);
 }
 
+/*
+* Clear the intiative table
+* NB: Since the creature name field is a controlled component with a separate state, it's not possible to clear its value
+* TO DO: figure out how to either share the state or propagate the clear event
+*/
 function resetBattle() {
   _Store.dispatch({ type: "RESET_BATTLE" });
   document.getElementById("creature").select();
