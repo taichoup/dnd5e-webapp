@@ -147,6 +147,7 @@ class Autocomplete extends Component {
             name="creature_name"
             autoComplete="off"
             autoFocus
+            onBlur={this.props.onBlur}
           />
           {suggestionsListComponent}
         </div>
