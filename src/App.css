@@ -242,11 +242,13 @@ nav > ul {
 .avatar-red {
   background-color: darkred;
   float: right;
+  border: 0.1em solid darkred;
 }
 
 .avatar-blue {
   background-color: darkblue;
   float: left;
+  border: 0.1em solid darkblue;
 }
 
 .avatar-label {
