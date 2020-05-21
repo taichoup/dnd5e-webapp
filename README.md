@@ -1,6 +1,6 @@
 ## ROADMAP
 
-- Automated intiative and initial HP for monsters
+- Option to choose qty of monsters (with grouped initiative) in the battle section
 - Optional battleground grid with adjustable scale and grid snap for avatars
 
 ### Popups
