@@ -5,22 +5,28 @@ import { Avatar } from "./Avatar";
 import Autocomplete from "./Autocomplete";
 
 /*
-* Main event handler for the battle form
-* @param {event object}
-*/
+ * Main event handler for the battle form
+ * @param {event object}
+ */
 function handleUserInput(event) {
   const creature_name = event.target["creature_name"].value;
   const initiative_roll = event.target["initiative_roll"].value;
   const hit_points = event.target["hit_points"].value;
   const team = event.target["team"].value;
-  _Store.dispatch({
-    type: "BATTLE",
-    payload: {
-      creature_name: creature_name,
+  // if no qty is set, qty is 1
+  const quantity = Number(event.target["qty"].value) || 1;
+  const update = [...Array(quantity)].map((creature, idx) => {
+    return {
+      creature_name: `${creature_name} ${quantity > 1 ? idx + 1 : ""}`,
       initiative_roll: initiative_roll,
       hit_points: hit_points,
       team: team,
-    },
+    };
+  });
+  console.log("Update is ", update);
+  _Store.dispatch({
+    type: "BATTLE",
+    payload: update,
   });
   event.preventDefault();
   event.target.reset();
@@ -28,36 +34,39 @@ function handleUserInput(event) {
 }
 
 /*
-* Sort function for the battle order table
-* @param {int} a
-* @param {int} b
-*/
+ * Sort function for the battle order table
+ * @param {int} a
+ * @param {int} b
+ */
 function initiative(a, b) {
   return b.initiative_roll - a.initiative_roll;
 }
 
 /*
-* Generate the label for the little avatars on the battleground
-* @param {string} avatarName - either free text from user or autocomplete result
-*/
+ * Generate the label for the little avatars on the battleground
+ * @param {string} avatarName - either free text from user or autocomplete result
+ */
 function generateAvatarName(avatarName) {
+  const avatarArray = avatarName.trim().split(" ");
+  if (avatarArray.length > 1) {
+    return avatarArray.map((elt) => elt[0]).join("");
+  }
   return avatarName.slice(0, 2);
 }
 
 /*
-* Clear the intiative table
-* NB: Since the creature name field is a controlled component with a separate state, it's not possible to clear its value
-* TO DO: figure out how to either share the state or propagate the clear event
-*/
+ * Clear the intiative table
+ * NB: Since the creature name field is a controlled component with a separate state, it's not possible to clear its value
+ * TO DO: figure out how to either share the state or propagate the clear event
+ */
 function resetBattle() {
   _Store.dispatch({ type: "RESET_BATTLE" });
   document.getElementById("creature").select();
 }
 
 function matchingCreaturesInDb(creature) {
-  return monstersInitHPDB.filter(c => c.label === creature);
+  return monstersInitHPDB.filter((c) => c.label === creature);
 }
-
 
 function rollInitiative(event) {
   console.log("Rolling initiative...");
@@ -75,7 +84,7 @@ function rollInitiative(event) {
 
 function getModifier(abilityScore) {
   return Math.floor((abilityScore - 10) / 2);
-};
+}
 
 function setHP(event) {
   const creature = event.target.value;
@@ -84,7 +93,6 @@ function setHP(event) {
     document.getElementById("hit_points").value = hp;
   }
 }
-
 
 // TODO: retrieve this dynamically?? should profile the perfs
 const monstersInitHPDB = [
@@ -1705,8 +1713,11 @@ export const Battle = (props) => {
     <StoreContext.Consumer>
       {(store) => (
         <div>
-          <form className="pure-form battle-form" onSubmit={handleUserInput} id="battleInput">
-            
+          <form
+            className="pure-form battle-form"
+            onSubmit={handleUserInput}
+            id="battleInput"
+          >
             <Autocomplete
               suggestions={monstersInitHPDB.map((entry) => entry.label)}
               onBlur={setHP}
@@ -1730,7 +1741,19 @@ export const Battle = (props) => {
               placeholder="Initiative roll"
               onFocus={rollInitiative}
             />
-            <input type="text" name="hit_points" placeholder="Hit points" id="hit_points"/>
+            <input
+              type="text"
+              name="hit_points"
+              placeholder="Hit points"
+              id="hit_points"
+            />
+            <input
+              type="number"
+              name="qty"
+              placeholder="Qty"
+              id="qty"
+              min="1"
+            />
             <button type="submit" className="pure-button pure-button-primary">
               ADD
             </button>
@@ -1748,23 +1771,32 @@ export const Battle = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-
-                {_Store
-                  .getState()
-                  .battle.sort(initiative)
-                  .map((item) => (
-                    <tr>
-                      <td>{_Store.getState().battle.indexOf(item) + 1}</td>
-                      <td>{item.creature_name}</td>
-                      <td>{item.initiative_roll}</td>
-                      <td>
-                        <div contentEditable suppressContentEditableWarning={true}>{item.hit_points}</div>
-                      </td>
-                      <td>
-                        <div contentEditable suppressContentEditableWarning={true}>-</div>
-                      </td>
-                    </tr>
-                  ))}
+                  {_Store
+                    .getState()
+                    .battle.sort(initiative)
+                    .map((item) => (
+                      <tr>
+                        <td>{_Store.getState().battle.indexOf(item) + 1}</td>
+                        <td>{item.creature_name}</td>
+                        <td>{item.initiative_roll}</td>
+                        <td>
+                          <div
+                            contentEditable
+                            suppressContentEditableWarning={true}
+                          >
+                            {item.hit_points}
+                          </div>
+                        </td>
+                        <td>
+                          <div
+                            contentEditable
+                            suppressContentEditableWarning={true}
+                          >
+                            -
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
 

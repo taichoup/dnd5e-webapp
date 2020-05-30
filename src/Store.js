@@ -16,7 +16,7 @@ const reducer = (state, action) => {
     state.path = payload;
   } else if (type === "BATTLE") {
     payload.id = uuidv4();
-    state.battle.push(payload);
+    state.battle.push(...payload);
     console.log(state.battle);
   } else if (type === "RESET_BATTLE") {
     state.battle = [];
