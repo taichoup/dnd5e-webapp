@@ -2,6 +2,7 @@
 
 - Option to choose qty of monsters (with grouped initiative) in the battle section
 - Optional battleground grid with adjustable scale and grid snap for avatars
+- Nicer animations and transitions with http://reactcommunity.org/react-transition-group/css-transition ?
 
 ### Popups
 
