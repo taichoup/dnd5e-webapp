@@ -3,6 +3,7 @@ import StoreContext from "./StoreContext";
 import { _Store } from "./Store";
 import { Avatar } from "./Avatar";
 import Autocomplete from "./Autocomplete";
+import NewWindow from 'react-new-window';
 
 /*
  * Main event handler for the battle form
@@ -1799,27 +1800,28 @@ export const Battle = (props) => {
                     ))}
                 </tbody>
               </table>
-
-              <div id="battleground">
-                <div>
-                  {_Store.getState().battle.map((item) => (
-                    <Avatar
-                      name={generateAvatarName(item.creature_name)}
-                      team={item.team}
-                    />
-                  ))}
+              <NewWindow>
+                <div id="battleground">
+                  <div>
+                    {_Store.getState().battle.map((item) => (
+                      <Avatar
+                        name={generateAvatarName(item.creature_name)}
+                        team={item.team}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div className="battle-reset">
-                <button
-                  type="reset"
-                  className="pure-button"
-                  onClick={resetBattle}
-                >
-                  Reset battle
-                </button>
-              </div>
+                <div className="battle-reset">
+                  <button
+                    type="reset"
+                    className="pure-button"
+                    onClick={resetBattle}
+                  >
+                    Reset battle
+                  </button>
+                </div>
+              </NewWindow>
             </>
           )}
         </div>
