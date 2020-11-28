@@ -12,6 +12,7 @@ export const Avatar = (props) => {
           }
         >
           <div className="avatar-label">{props.name}</div>
+          <div className="avatar-petit-nom">{props.firstName}</div>
         </div>
       </div>
     </Draggable>

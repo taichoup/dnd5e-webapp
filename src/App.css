@@ -256,6 +256,14 @@ nav > ul {
   cursor: crosshair;
 }
 
+.avatar-label:hover + .avatar-petit-nom {
+  display: block;
+}
+
+.avatar-petit-nom {
+  display: none;
+}
+
 .holder {
   position: relative;
 }
