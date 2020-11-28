@@ -81,7 +81,7 @@ form {
   justify-content: center;
 }
 
-input {
+input[type='text'] {
   width: 40em;
   height: 1.2em;
   border-radius: 5px;
@@ -144,13 +144,13 @@ pre > p {
 
 .battle-form input {
   height: 2.5em;
-  margin: 1em 0.2em;
+  margin: 0.8em 0.2em;
   width: 20%;
 }
 
 .battle-form select {
   height: 2.5em;
-  margin: 1em 0.2em;
+  margin: 0.8em 0.2em;
   color: gray;
 }
 
@@ -298,4 +298,13 @@ nav > ul {
 
 #creature {
   width: auto;
+}
+
+#popout-checkbox {
+  color: white;
+  padding: 1em 0em 0em 0.2em;
+}
+
+#popout-checkbox label {
+  margin-left: 0.2em;
 }

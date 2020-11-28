@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState } from "react";
 import StoreContext from "./StoreContext";
 import { _Store } from "./Store";
 import { Avatar } from "./Avatar";
@@ -1710,10 +1710,51 @@ const monstersInitHPDB = [
 ];
 
 export const Battle = (props) => {
+
+  const [battleDisplay, setBattleDisplay] = useState("inline");
+
+  function handlePopoutSetting(event) {
+    if (battleDisplay === "popout") {
+      setBattleDisplay("inline");
+    } else if (battleDisplay === "inline") {
+      setBattleDisplay("popout");
+    }
+  };
+
+  const Battleground = () => {
+    return (
+      <div>
+        <div id="battleground">
+          <div>
+            {_Store.getState().battle.map((item) => (
+              <Avatar
+                name={generateAvatarName(item.creature_name)}
+                team={item.team}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="battle-reset">
+          <button
+            type="reset"
+            className="pure-button"
+            onClick={resetBattle}
+          >
+      Reset battle
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <StoreContext.Consumer>
       {(store) => (
         <div>
+          <div id="popout-checkbox">
+            <input type="checkbox" onChange={handlePopoutSetting} checked={battleDisplay === "popout" ? true : false} value={battleDisplay} id="popout-setting" />
+            <label for="popout-setting">Pop out the battleground</label>
+          </div>
           <form
             className="pure-form battle-form"
             onSubmit={handleUserInput}
@@ -1800,28 +1841,16 @@ export const Battle = (props) => {
                     ))}
                 </tbody>
               </table>
-              <NewWindow>
-                <div id="battleground">
-                  <div>
-                    {_Store.getState().battle.map((item) => (
-                      <Avatar
-                        name={generateAvatarName(item.creature_name)}
-                        team={item.team}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="battle-reset">
-                  <button
-                    type="reset"
-                    className="pure-button"
-                    onClick={resetBattle}
-                  >
-                    Reset battle
-                  </button>
-                </div>
-              </NewWindow>
+              { battleDisplay === "inline" && <Battleground />}
+              { battleDisplay === "popout" && (
+                <NewWindow 
+                  title="Battle"
+                  center="screen"
+                  // onUnload={setBattleDisplay("inline")}
+                >
+                  <Battleground />
+                </NewWindow>
+              )}
             </>
           )}
         </div>
