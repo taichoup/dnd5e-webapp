@@ -25,7 +25,10 @@ function handleUserInput(event) {
       hit_points: hit_points,
       team: team,
       // select a first name at random from the list of NPC names
-      creature_birthName: team === "Red" ? npcNames[Math.floor(Math.random() * npcNames.length)] : "",
+      // PCs keep their name
+      creature_birthName: team === "Red"
+        ? npcNames[Math.floor(Math.random() * npcNames.length)] 
+        : creature_name,
     };
   });
   console.log("Update is ", update);
