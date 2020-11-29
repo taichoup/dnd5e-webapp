@@ -62,7 +62,7 @@ export const Popup = () => {
         <div className="modal" id="modal">
           <div className="modal-content">
             <button className="close-button" onClick={() => closePopup()}>
-              &times;
+              ⨉
             </button>
             {_Store.getState().popupdata
               ? formatResults(_Store.getState().popupdata)

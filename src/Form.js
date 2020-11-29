@@ -91,16 +91,16 @@ export const Form = () => {
           />
 
           <div className="flex-container results">
-            {fuseResults.map((o) => (
-              <pre>
+            {fuseResults.map((o, idx) => (
+              <pre key={idx}>
                 <p>{o.section.toUpperCase()}</p>
                 <ul>
                   {o.entries
                     .filter(
                       (e) => e.toLowerCase().indexOf(q.toLowerCase()) > -1
                     )
-                    .map((e) => (
-                      <li>
+                    .map((e, idx) => (
+                      <li key={idx}>
                         <a
                           href="/#"
                           onClick={() => showPopup(generatePath(o.section, e))}
