@@ -1,8 +1,9 @@
 ## ROADMAP
 
-- Option to choose qty of monsters (with grouped initiative) in the battle section
 - Optional battleground grid with adjustable scale and grid snap for avatars
 - Nicer animations and transitions with http://reactcommunity.org/react-transition-group/css-transition ?
+- Additional generated info for each creature on the battleground
+- Names by race (a lot of work)
 
 ### Popups
 
@@ -17,7 +18,3 @@
 ### API
 
 - Back up / cache API results? (SPOF)
-
-### Initiative tracker
-
-- should hide the table headers and button (or at least the button) when the state doesn't contain any battle roster

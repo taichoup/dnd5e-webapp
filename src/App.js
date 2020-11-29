@@ -1,8 +1,8 @@
 import "./App.css";
 import React from "react";
 import StoreContext from "./StoreContext";
-import { Form } from "./Form";
-import { Battle } from "./Battle";
+import { Form } from "./components/Form";
+import { Battle } from "./components/Battle";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {

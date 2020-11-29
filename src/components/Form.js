@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import StoreContext from "./StoreContext";
-import { _Store } from "./Store";
+import StoreContext from "../StoreContext";
+import { _Store } from "../Store";
 import axios from "axios";
 import Fuse from "fuse.js";
 import { Popup } from "./Popup";

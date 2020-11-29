@@ -1,11 +1,11 @@
 import React, {useState } from "react";
-import StoreContext from "./StoreContext";
-import { _Store } from "./Store";
+import StoreContext from "../StoreContext";
+import { _Store } from "../Store";
 import { Avatar } from "./Avatar";
 import Autocomplete from "./Autocomplete";
 import NewWindow from 'react-new-window';
-import { monstersInitHPDB } from './monsters';
-import { npcNames } from './npcs';
+import { monstersInitHPDB } from '../assets/monsters';
+import { npcNames } from '../assets/npcs';
 
 /*
  * Main event handler for the battle form
