@@ -4,6 +4,10 @@
 - Nicer animations and transitions with http://reactcommunity.org/react-transition-group/css-transition ?
 - Additional generated info for each creature on the battleground
 - Names by race (a lot of work)
+- Several map types / dynamic stylesheets (with a dedicated battleground component, probably)
+    - choose shape of battleground (rectangle, natural, circle)
+    - choose terrain type
+- use https://animista.net/ to add fancy animations?
 
 ### Popups
 
