@@ -9,6 +9,7 @@
     - choose terrain type
 - use https://animista.net/ to add fancy animations?
 - model the contentEditable fields in the battle table after the input in https://globster.xyz
+- BUG: drawing mode / canvas should be a layer below the creatures on the battleground
 
 ### Popups
 

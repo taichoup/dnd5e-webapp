@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "fuse.js": "^3.4.6",
     "react": "^16.13.0",
+    "react-canvas-draw": "^1.1.1",
     "react-dom": "^16.13.0",
     "react-draggable": "^4.3.1",
     "react-new-window": "^0.1.2",
