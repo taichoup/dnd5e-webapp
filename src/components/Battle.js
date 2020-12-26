@@ -140,12 +140,12 @@ export const Battle = (props) => {
             ))}
           </div>
           <CanvasDraw 
-            brushRadius="3"
-            hideGrid="true"
+            brushRadius={3}
+            hideGrid={true}
             backgroundColor="rgba(0,0,0,0)"
             canvasWidth="100%"
             canvasHeight="100%"
-            lazyRadius="0"
+            lazyRadius={0}
             ref={canvas}
           />
         </div>
