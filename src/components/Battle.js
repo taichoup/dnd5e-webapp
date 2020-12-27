@@ -1,8 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import StoreContext from "../StoreContext";
+import { Battleground } from "./Battleground";
 import { _Store } from "../Store";
-import { Avatar } from "./Avatar";
-import CanvasDraw from "react-canvas-draw";
 import Autocomplete from "./Autocomplete";
 import NewWindow from 'react-new-window';
 import { monstersInitHPDB } from '../assets/monsters';
@@ -51,28 +50,6 @@ function initiative(a, b) {
   return b.initiative_roll - a.initiative_roll;
 }
 
-/*
- * Generate the label for the little avatars on the battleground
- * @param {string} avatarName - either free text from user or autocomplete result
- */
-function generateAvatarName(avatarName) {
-  const avatarArray = avatarName.trim().split(" ");
-  if (avatarArray.length > 1) {
-    return avatarArray.map((elt) => elt[0]).join("");
-  }
-  return avatarName.slice(0, 2);
-}
-
-/*
- * Clear the initiative table
- * NB: Since the creature name field is a controlled component with a separate state, it's not possible to clear its value
- * TO DO: figure out how to either share the state or propagate the clear event
- */
-function resetBattle() {
-  _Store.dispatch({ type: "RESET_BATTLE" });
-  document.getElementById("creature").select();
-}
-
 function matchingCreaturesInDb(creature) {
   return monstersInitHPDB.filter((c) => c.label === creature);
 }
@@ -106,7 +83,6 @@ function setHP(event) {
 export const Battle = (props) => {
 
   const [battleDisplay, setBattleDisplay] = useState("inline");
-  const canvas = useRef(null);
 
   function handlePopoutSetting(event) {
     if (battleDisplay === "popout") {
@@ -114,66 +90,6 @@ export const Battle = (props) => {
     } else if (battleDisplay === "inline") {
       setBattleDisplay("popout");
     }
-  };
-
-  function resetCanvas() {
-    canvas.current.clear();
-  }
-
-  function undoCanvas() {
-    canvas.current.undo();
-  }
-
-  const Battleground = () => {
-
-    return (
-      <div>
-        <div id="battleground">
-          <div id="creature-layer">
-            {_Store.getState().battle.map((item) => (
-              <Avatar
-                key={item.creature_name}
-                name={generateAvatarName(item.creature_name)}
-                team={item.team}
-                firstName={item.creature_birthName}
-              />
-            ))}
-          </div>
-          <CanvasDraw 
-            brushRadius={3}
-            hideGrid={true}
-            backgroundColor="rgba(0,0,0,0)"
-            canvasWidth="100%"
-            canvasHeight="100%"
-            lazyRadius={0}
-            ref={canvas}
-          />
-        </div>
-        <div className="battle-reset">
-          <button
-            type="reset"
-            className="pure-button"
-            onClick={resetBattle}
-          >
-            Reset battle
-          </button>
-          <button
-            type="button"
-            className="pure-button"
-            onClick={undoCanvas}
-          >
-            Undo brush stroke
-          </button>
-          <button
-            type="reset"
-            className="pure-button"
-            onClick={resetCanvas}
-          >
-            Reset drawing
-          </button>
-        </div>
-      </div>
-    );
   };
 
   return (

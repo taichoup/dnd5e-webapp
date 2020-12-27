@@ -14,7 +14,6 @@
 ### Popups
 
 - Better UI for the popups
-- Fix the bugs (WIP)
 - Don't display rows with empty values
 
 ### Search bar
@@ -24,3 +23,9 @@
 ### API
 
 - Back up / cache API results? (SPOF)
+
+### Issues (to upload as GiHub issues later)
+
+- not possible to add creatures to the battlefield in the middle of combat without resetting everything
+- when battlefield is popped out, canvas is too small
+- popping battlefield out in the middle of battle resets everything
