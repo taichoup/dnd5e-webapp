@@ -129,7 +129,7 @@ export const Battle = (props) => {
     return (
       <div>
         <div id="battleground">
-          <div>
+          <div id="creature-layer">
             {_Store.getState().battle.map((item) => (
               <Avatar
                 key={item.creature_name}
@@ -229,7 +229,9 @@ export const Battle = (props) => {
               ADD
             </button>
           </form>
+          {/* COMMENT THIS TO FOR BATTLEGROUND DEVELOPMENT  */}
           {_Store.getState().battle.length >= 1 && (
+          // {(
             <>
               <table className="pure-table battle-table">
                 <thead>

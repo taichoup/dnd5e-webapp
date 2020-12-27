@@ -320,6 +320,10 @@ nav > ul {
   margin-left: 0.2em;
 }
 
+#creature-layer {
+  position: relative;
+  z-index: 10000;
+}
 #loader {
   display: flex;
   align-content: center;
