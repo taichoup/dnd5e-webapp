@@ -7,10 +7,9 @@ import NewWindow from 'react-new-window';
 import { monstersInitHPDB } from '../assets/monsters';
 import { npcNames } from '../assets/npcs';
 
-/*
- * Main event handler for the battle form
- * @param {event object}
- */
+// EVENT HANDLERS --------------------------------------------------------
+
+// handle input from battle setup form and updates the state with it
 function handleUserInput(event) {
   const creature_name = event.target["creature_name"].value;
   const initiative_roll = event.target["initiative_roll"].value;
@@ -41,19 +40,19 @@ function handleUserInput(event) {
   document.getElementById("creature").focus();
 }
 
-/*
- * Sort function for the battle order table
- * @param {int} a
- * @param {int} b
- */
-function initiative(a, b) {
+// HELPERS ---------------------------------------------------------------
+
+// sort function for the battle order table
+function initiativeSortFunction(a, b) {
   return b.initiative_roll - a.initiative_roll;
 }
 
+// searches for matching creature in db 
 function matchingCreaturesInDb(creature) {
   return monstersInitHPDB.filter((c) => c.label === creature);
 }
 
+// roll initiative for a category of monsters
 function rollInitiative(event) {
   console.log("Rolling initiative...");
   const creature = document.getElementById("creature").value;
@@ -68,10 +67,12 @@ function rollInitiative(event) {
   }
 }
 
+// compute modifier based on ability score
 function getModifier(abilityScore) {
   return Math.floor((abilityScore - 10) / 2);
 }
 
+// populate HP info from db matches
 function setHP(event) {
   const creature = event.target.value;
   if (matchingCreaturesInDb(creature).length) {
@@ -162,7 +163,7 @@ export const Battle = (props) => {
                 <tbody>
                   {_Store
                     .getState()
-                    .battle.sort(initiative)
+                    .battle.sort(initiativeSortFunction)
                     .map((item) => (
                       <tr key={item.creature_name}>
                         <td>{_Store.getState().battle.indexOf(item) + 1}</td>
