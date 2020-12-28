@@ -9,12 +9,15 @@ export const Popup = () => {
   useEffect(() => {
     const statePath = _Store.getState().path;
     async function fetchData() {
-      const res = await fetch(statePath); // For the hook to work we need to wrap the fetch in an async...await thing.
-      res
-        .json()
-        .then((res) => _Store.dispatch({ type: "GETDATA_POPUP", payload: res }))
-        .catch((error) => console.log(error.message));
-    }
+      try {
+        const res = await(fetch(statePath));
+        const res_json = await res.json();
+        _Store.dispatch({ type: "GETDATA_POPUP", payload: res_json });
+      } catch (error) {
+        console.log(error.message);
+      }
+
+      }
     fetchData();
   }, []);
 
