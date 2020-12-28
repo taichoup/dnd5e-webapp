@@ -60,7 +60,7 @@ export const Popup = () => {
   return (
     <StoreContext.Consumer>
       {(store) => (
-        <div className="modal puff-in-center" id="modal">
+        <div className="modal" id="modal">
           <div className="modal-content">
             <button className="close-button" onClick={() => closePopup()}>
               ⨉
