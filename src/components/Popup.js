@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { _Store } from "../Store";
 import StoreContext from "../StoreContext";
 import { JsonToTable } from "./JsonToTable";
+import { Loader } from "./Loader";
 
 export const Popup = () => {
   useEffect(() => {
@@ -66,7 +67,7 @@ export const Popup = () => {
             </button>
             {_Store.getState().popupdata
               ? formatResults(_Store.getState().popupdata)
-              : "No data yet."}
+              : <Loader/>}
           </div>
         </div>
       )}
