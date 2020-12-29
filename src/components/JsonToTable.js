@@ -90,8 +90,10 @@ export const JsonToTable = (props) => {
                                                     {c}
                                                 </div>
                                             </td>
-                                            <td>
-                                                {data[c] ? <div className="td_row_even">{data[c]}</div> : null}
+                                            {/* <td> */}
+                                            <td className="td_row_even">
+                                                {data[c] ? <div>{data[c]}</div> : null}
+                                                {/* {data[c] ? <div className="td_row_even">{data[c]}</div> : null} */}
                                             </td>
                                         </tr>
 
@@ -129,16 +131,18 @@ export const JsonToTable = (props) => {
 
                     // array
                     ? <table>
-                        <tr>
-                            {
-                                arr.map((item) =>
-                                    <td colSpan="2">
-                                        <div className="td_head"></div>
-                                        {buildArray(item)}
-                                    </td>
-                                )
-                            }
-                        </tr>
+                        <tbody>
+                            <tr>
+                                {
+                                    arr.map((item) =>
+                                        <td colSpan="2">
+                                            <div className="td_head"></div>
+                                            {buildArray(item)}
+                                        </td>
+                                    )
+                                }
+                            </tr>
+                        </tbody>
                     </table>
 
                     // string

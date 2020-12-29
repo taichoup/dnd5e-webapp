@@ -63,8 +63,10 @@ html {
 }
 
 .td_head {
-  padding: 2px;
+  /* padding: 2px; */
   font-weight: 700;
+  margin-bottom: .4em;
+  width: 100%;
 }
 
 input,
@@ -81,10 +83,12 @@ td,
 th {
   border: 1px solid gray;
   font-size: small;
+  padding: 0.5em;
 }
 
 table {
   font-size: 100%;
+  table-layout: fixed;
 }
 
 .api-results {
@@ -96,11 +100,16 @@ table {
 }
 
 .small-table {
-  width: 100%;
+  /* width: 100%; */
   border: 0.01em lightgray;
 }
 
 .api-results-ul {
   font-size: small;
   margin: 2em 2em 0.5em -1em;
+}
+
+table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
