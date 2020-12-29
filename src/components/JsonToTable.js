@@ -24,7 +24,7 @@ export const JsonToTable = (props) => {
         const thead = Array.from(allKeysSet);
 
         return (
-            <table className="small-table">
+            <table className={thead.length > 1 ? 'small-table' : 'super-small-table'}>
                 <thead>
                     <tr>
                         {thead.map(e => <th>{e}</th>)}
@@ -85,12 +85,13 @@ export const JsonToTable = (props) => {
 
                                         // value is a primitive (end leaf)
                                         : <tr>
-                                            <td>
+                                            {c !== "name" && <td>
+                                            {/* <td> */}
                                                 <div className="td_head">
                                                     {c}
                                                 </div>
-                                            </td>
-                                            {/* <td> */}
+                                            </td>}
+                                            {/* </td> */}
                                             <td className="td_row_even">
                                                 {data[c] ? <div>{data[c]}</div> : null}
                                                 {/* {data[c] ? <div className="td_row_even">{data[c]}</div> : null} */}

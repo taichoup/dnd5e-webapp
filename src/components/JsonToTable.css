@@ -99,9 +99,14 @@ table {
   border-collapse: collapse;
 }
 
-.small-table {
+.small-table,
+.super-small-table {
   /* width: 100%; */
   border: 0.01em lightgray;
+}
+
+.super-small-table {
+  width: 100%;
 }
 
 .api-results-ul {
