@@ -58,7 +58,7 @@ body {
 
 pre {
   border: none;
-  border-radius: 0;
+  border-radius: 2px;
   overflow: hidden;
   overflow-x: auto;
   background: #fff;
@@ -136,6 +136,8 @@ a:focus {
 
 pre > p {
   margin-left: 10px;
+  color: #9d0a0e;
+  font-weight: bold;
 }
 
 .battle-form {
