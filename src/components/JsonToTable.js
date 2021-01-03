@@ -85,16 +85,14 @@ export const JsonToTable = (props) => {
 
                                         // value is a primitive (end leaf)
                                         : <tr>
+                                            {/* remove the name keys */}
                                             {c !== "name" && <td>
-                                            {/* <td> */}
                                                 <div className="td_head">
                                                     {c}
                                                 </div>
                                             </td>}
-                                            {/* </td> */}
                                             <td className="td_row_even">
                                                 {data[c] ? <div>{data[c]}</div> : null}
-                                                {/* {data[c] ? <div className="td_row_even">{data[c]}</div> : null} */}
                                             </td>
                                         </tr>
 
