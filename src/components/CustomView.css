@@ -1,0 +1,26 @@
+.none {
+    color: gray;
+}
+
+.primitive {
+    color: #9d0a0e;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.api-results {
+  background-color: #e8e8e8;
+  padding: 0.5em 1em 0.5em 0em;
+}
+
+li {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+ul > ul {
+    border-left: 1px solid lightgray;
+    margin-left: -12.5px;
+}

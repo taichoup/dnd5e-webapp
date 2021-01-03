@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { _Store } from "../Store";
 import StoreContext from "../StoreContext";
 import { JsonToTable } from "./JsonToTable";
+import { CustomView } from "./CustomView";
 import ReactJson from 'react-json-view';
 import { Loader } from "./Loader";
 import { removeUselessProperties, removeNullishValues } from "../utils/apiFormatter";
@@ -61,6 +62,31 @@ export const Popup = () => {
         return obj;
       }, {});
 
+  function renderSwitch(param) {
+    switch(param) {
+      case 'table':
+        return <JsonToTable json={filteredResults} />
+      case 'json':
+        return (
+          <ReactJson
+            src={filteredResults}
+            theme="solarized"
+            name="rule"
+            iconStyle="circle"
+            collapsed={1}
+            enableClipboard={false}
+            displayDataTypes={false}
+            displayObjectSize={false}
+            style={{ padding: "1em" }}
+          />
+        )
+      case 'custom':
+        return <CustomView json={filteredResults} />
+      default:
+        return "Rien"
+    }
+  }
+
     return (
       <div>
         <h2>{results.name}</h2>
@@ -78,18 +104,16 @@ export const Popup = () => {
         >
           JSON view
         </button>
-        {toggleView === "table" && <JsonToTable json={filteredResults} />}
-        {toggleView === "json" && <ReactJson
-          src={filteredResults}
-          theme="solarized"
-          name="rule"
-          iconStyle="circle"
-          collapsed={1}
-          enableClipboard={false}
-          displayDataTypes={false}
-          displayObjectSize={false}
-          style={{ padding: "1em" }}
-        />}
+        <button
+          type="button"
+          disabled={toggleView === "custom" ? true : false}
+          onClick={() => setToggleView("custom")}
+        >
+          Custom view
+        </button>
+        
+        {renderSwitch(toggleView)}
+        
       </div>
     );
   }
