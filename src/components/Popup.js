@@ -14,11 +14,11 @@ export const Popup = () => {
       try {
         const res = await(fetch(statePath));
         const res_json = await res.json();
-        console.log("res_json: ", res_json);
+        // console.log("res_json: ", res_json);
         removeUselessProperties(res_json, "url");
         removeUselessProperties(res_json, "index");
         removeNullishValues(res_json);
-        console.log("cleaned", res_json);
+        // console.log("cleaned", res_json);
         _Store.dispatch({ type: "GETDATA_POPUP", payload: res_json });
       } catch (error) {
         console.log(error.message);

@@ -27,13 +27,13 @@ export const JsonToTable = (props) => {
             <table className={thead.length > 1 ? 'small-table' : 'super-small-table'}>
                 <thead>
                     <tr>
-                        {thead.map(e => <th>{e}</th>)}
+                        {thead.map((e, idx) => <th key={e + idx}>{e}</th>)}
                     </tr>
                 </thead>
                 <tbody>
                     {arr.map((e, i) =>
-                        <tr>{thead.map((k, j) =>
-                            <td className={isEven(i)
+                        <tr key={e + i}>{thead.map((k, j) =>
+                            <td key={k + j} className={isEven(i)
                                 ? "td_row_even"
                                 : "td_row_odd"}>
                                 {e.hasOwnProperty(k)
@@ -60,21 +60,21 @@ export const JsonToTable = (props) => {
         if (isArray(data)) {
             return buildArray(data);
         }
-        console.log(data);
+        // console.log(data);
         return (
             <table style={{ width: "100%" }}>
                 <tbody>
                     {
                         // json is not an array. iterating over its properties
                         data // result of async operation so need to check that it's there for intermediate renders
-                            ? Object.keys(data).map(c =>
+                            ? Object.keys(data).map((c, idx) =>
 
                                 (isPrimitive(data[c]) || isArray(data[c]))
                                     // case where the value is an array or a primitive
                                     ? (isArray(data[c]))
 
                                         // value is an array
-                                        ? <tr>
+                                        ? <tr key={c + idx}>
                                             <td colSpan="2">
                                                 <div className="td_head">
                                                     {c}
@@ -84,7 +84,7 @@ export const JsonToTable = (props) => {
                                         </tr>
 
                                         // value is a primitive (end leaf)
-                                        : <tr>
+                                        : <tr key={c + idx}>
                                             {/* remove the name keys */}
                                             {c !== "name" && <td>
                                                 <div className="td_head">
@@ -97,7 +97,7 @@ export const JsonToTable = (props) => {
                                         </tr>
 
                                     // value is an object
-                                    : <tr>
+                                    : <tr key={c + idx}>
                                         <td colSpan="2">
                                             <div className="td_head">
                                                 {c}
@@ -133,8 +133,8 @@ export const JsonToTable = (props) => {
                         <tbody>
                             <tr>
                                 {
-                                    arr.map((item) =>
-                                        <td colSpan="2">
+                                    arr.map((item, idx) =>
+                                        <td key={item + idx} colSpan="2">
                                             <div className="td_head"></div>
                                             {buildArray(item)}
                                         </td>
@@ -146,7 +146,7 @@ export const JsonToTable = (props) => {
 
                     // string
                     : <ul className="api-results-ul">
-                        {arr.map(item => <li>{item}</li>)}
+                        {arr.map((item, idx) => <li key={item + idx}>{item}</li>)}
                     </ul>
 
 
