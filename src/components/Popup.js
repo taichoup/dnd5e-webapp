@@ -1,8 +1,9 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { _Store } from "../Store";
 import StoreContext from "../StoreContext";
 import { JsonToTable } from "./JsonToTable";
+import ReactJson from 'react-json-view';
 import { Loader } from "./Loader";
 import { removeUselessProperties, removeNullishValues } from "../utils/apiFormatter";
 
@@ -41,6 +42,8 @@ export const Popup = () => {
     };
   }, []);
 
+  const [toggleView, setToggleView] = useState("table");
+
   function closePopup() {
     document.getElementById("modal").style.display = "none";
     document.getElementById("query-field").focus();
@@ -61,7 +64,32 @@ export const Popup = () => {
     return (
       <div>
         <h2>{results.name}</h2>
-        <JsonToTable json={filteredResults} />
+        <button
+          type="button" 
+          disabled={toggleView === "table" ? true : false}
+          onClick={() => setToggleView("table")}
+        >
+          Table view
+        </button>
+        <button
+          type="button"
+          disabled={toggleView === "json" ? true : false}
+          onClick={() => setToggleView("json")}
+        >
+          JSON view
+        </button>
+        {toggleView === "table" && <JsonToTable json={filteredResults} />}
+        {toggleView === "json" && <ReactJson
+          src={filteredResults}
+          theme="solarized"
+          name="rule"
+          iconStyle="circle"
+          collapsed={1}
+          enableClipboard={false}
+          displayDataTypes={false}
+          displayObjectSize={false}
+          style={{ padding: "1em" }}
+        />}
       </div>
     );
   }
