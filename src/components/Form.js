@@ -63,7 +63,7 @@ export const Form = () => {
         );
       _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
     })();
-    return () => {};
+    return () => {}; // abort function (does nothing, can theoretically be removed)
   }, []);
 
   // SEARCH -------------------------------------------------------------
