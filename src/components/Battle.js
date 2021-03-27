@@ -1,16 +1,15 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import StoreContext from "../StoreContext";
+import { Battleground } from "./Battleground";
 import { _Store } from "../Store";
-import { Avatar } from "./Avatar";
 import Autocomplete from "./Autocomplete";
 import NewWindow from 'react-new-window';
 import { monstersInitHPDB } from '../assets/monsters';
 import { npcNames } from '../assets/npcs';
 
-/*
- * Main event handler for the battle form
- * @param {event object}
- */
+// EVENT HANDLERS --------------------------------------------------------
+
+// handle input from battle setup form and updates the state with it
 function handleUserInput(event) {
   const creature_name = event.target["creature_name"].value;
   const initiative_roll = event.target["initiative_roll"].value;
@@ -41,41 +40,19 @@ function handleUserInput(event) {
   document.getElementById("creature").focus();
 }
 
-/*
- * Sort function for the battle order table
- * @param {int} a
- * @param {int} b
- */
-function initiative(a, b) {
+// HELPERS ---------------------------------------------------------------
+
+// sort function for the battle order table
+function initiativeSortFunction(a, b) {
   return b.initiative_roll - a.initiative_roll;
 }
 
-/*
- * Generate the label for the little avatars on the battleground
- * @param {string} avatarName - either free text from user or autocomplete result
- */
-function generateAvatarName(avatarName) {
-  const avatarArray = avatarName.trim().split(" ");
-  if (avatarArray.length > 1) {
-    return avatarArray.map((elt) => elt[0]).join("");
-  }
-  return avatarName.slice(0, 2);
-}
-
-/*
- * Clear the intiative table
- * NB: Since the creature name field is a controlled component with a separate state, it's not possible to clear its value
- * TO DO: figure out how to either share the state or propagate the clear event
- */
-function resetBattle() {
-  _Store.dispatch({ type: "RESET_BATTLE" });
-  document.getElementById("creature").select();
-}
-
+// searches for matching creature in db 
 function matchingCreaturesInDb(creature) {
   return monstersInitHPDB.filter((c) => c.label === creature);
 }
 
+// roll initiative for a category of monsters
 function rollInitiative(event) {
   console.log("Rolling initiative...");
   const creature = document.getElementById("creature").value;
@@ -90,10 +67,12 @@ function rollInitiative(event) {
   }
 }
 
+// compute modifier based on ability score
 function getModifier(abilityScore) {
   return Math.floor((abilityScore - 10) / 2);
 }
 
+// populate HP info from db matches
 function setHP(event) {
   const creature = event.target.value;
   if (matchingCreaturesInDb(creature).length) {
@@ -112,34 +91,6 @@ export const Battle = (props) => {
     } else if (battleDisplay === "inline") {
       setBattleDisplay("popout");
     }
-  };
-
-  const Battleground = () => {
-    return (
-      <div>
-        <div id="battleground">
-          <div>
-            {_Store.getState().battle.map((item) => (
-              <Avatar
-                key={item.creature_name}
-                name={generateAvatarName(item.creature_name)}
-                team={item.team}
-                firstName={item.creature_birthName}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="battle-reset">
-          <button
-            type="reset"
-            className="pure-button"
-            onClick={resetBattle}
-          >
-      Reset battle
-          </button>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -195,7 +146,9 @@ export const Battle = (props) => {
               ADD
             </button>
           </form>
+          {/* COMMENT THIS TO FOR BATTLEGROUND DEVELOPMENT  */}
           {_Store.getState().battle.length >= 1 && (
+          // {(
             <>
               <table className="pure-table battle-table">
                 <thead>
@@ -210,7 +163,7 @@ export const Battle = (props) => {
                 <tbody>
                   {_Store
                     .getState()
-                    .battle.sort(initiative)
+                    .battle.sort(initiativeSortFunction)
                     .map((item) => (
                       <tr key={item.creature_name}>
                         <td>{_Store.getState().battle.indexOf(item) + 1}</td>
