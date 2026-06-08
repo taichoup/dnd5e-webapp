@@ -19,7 +19,7 @@ export const Popup = () => {
         removeNullishValues(res_json);
         dispatch({ type: "GETDATA_POPUP", payload: res_json });
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     }
     fetchData();

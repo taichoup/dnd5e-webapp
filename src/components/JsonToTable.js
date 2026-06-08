@@ -60,7 +60,6 @@ export const JsonToTable = (props) => {
         if (isArray(data)) {
             return buildArray(data);
         }
-        console.log(data);
         return (
             <table style={{ width: "100%" }}>
                 <tbody>

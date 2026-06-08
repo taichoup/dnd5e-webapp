@@ -24,7 +24,6 @@ const removeNullishValues = (obj) => {
                 removeNullishValues(obj[prop]);
             } else {
                 if (!obj[prop]) {
-                    // console.log("Removing property with empty value: ", prop, obj[prop]);
                     delete obj[prop];
                 }
             }
