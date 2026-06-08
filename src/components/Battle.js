@@ -1,78 +1,34 @@
 import React, { useState } from "react";
-import StoreContext from "../StoreContext";
+import { useSelector, useDispatch } from "react-redux";
 import { Battleground } from "./Battleground";
-import { _Store } from "../Store";
 import Autocomplete from "./Autocomplete";
 import NewWindow from 'react-new-window';
 import { monstersInitHPDB } from '../assets/monsters';
 import { npcNames } from '../assets/npcs';
 
-// EVENT HANDLERS --------------------------------------------------------
-
-// handle input from battle setup form and updates the state with it
-function handleUserInput(event) {
-  const creature_name = event.target["creature_name"].value;
-  const initiative_roll = event.target["initiative_roll"].value;
-  const hit_points = event.target["hit_points"].value;
-  const team = event.target["team"].value;
-  // if no qty is set, qty is 1
-  const quantity = Number(event.target["qty"].value) || 1;
-  const update = [...Array(quantity)].map((creature, idx) => {
-    return {
-      creature_name: `${creature_name} ${quantity > 1 ? idx + 1 : ""}`,
-      initiative_roll: initiative_roll,
-      hit_points: hit_points,
-      team: team,
-      // select a first name at random from the list of NPC names
-      // PCs keep their name
-      creature_birthName: team === "Red"
-        ? npcNames[Math.floor(Math.random() * npcNames.length)] 
-        : creature_name,
-    };
-  });
-  console.log("Update is ", update);
-  _Store.dispatch({
-    type: "BATTLE",
-    payload: update,
-  });
-  event.preventDefault();
-  event.target.reset();
-  document.getElementById("creature").focus();
-}
-
-// HELPERS ---------------------------------------------------------------
-
-// sort function for the battle order table
 function initiativeSortFunction(a, b) {
   return b.initiative_roll - a.initiative_roll;
 }
 
-// searches for matching creature in db 
 function matchingCreaturesInDb(creature) {
   return monstersInitHPDB.filter((c) => c.label === creature);
 }
 
-// roll initiative for a category of monsters
-function rollInitiative(event) {
-  console.log("Rolling initiative...");
-  const creature = document.getElementById("creature").value;
+function getModifier(abilityScore) {
+  return Math.floor((abilityScore - 10) / 2);
+}
 
+function rollInitiative() {
+  const creature = document.getElementById("creature").value;
   if (matchingCreaturesInDb(creature).length) {
     const dex = matchingCreaturesInDb(creature)[0].dex;
     const modifier = getModifier(dex);
     const roll = Math.floor(Math.random() * 20) + modifier;
-    console.log("%s + %s = %s", roll - modifier, modifier, roll);
     document.getElementById("initiative_roll").value = roll;
     return roll;
   }
 }
 
-// compute modifier based on ability score
-function getModifier(abilityScore) {
-  return Math.floor((abilityScore - 10) / 2);
-}
-
-// populate HP info from db matches
 function setHP(event) {
   const creature = event.target.value;
   if (matchingCreaturesInDb(creature).length) {
@@ -81,128 +37,112 @@ function setHP(event) {
   }
 }
 
-export const Battle = (props) => {
-
+export const Battle = () => {
+  const dispatch = useDispatch();
+  const battle = useSelector((state) => state.battle);
   const [battleDisplay, setBattleDisplay] = useState("inline");
 
-  function handlePopoutSetting(event) {
-    if (battleDisplay === "popout") {
-      setBattleDisplay("inline");
-    } else if (battleDisplay === "inline") {
-      setBattleDisplay("popout");
-    }
-  };
+  function handleUserInput(event) {
+    const creature_name = event.target["creature_name"].value;
+    const initiative_roll = event.target["initiative_roll"].value;
+    const hit_points = event.target["hit_points"].value;
+    const team = event.target["team"].value;
+    const quantity = Number(event.target["qty"].value) || 1;
+    const update = [...Array(quantity)].map((_, idx) => ({
+      creature_name: `${creature_name} ${quantity > 1 ? idx + 1 : ""}`,
+      initiative_roll,
+      hit_points,
+      team,
+      creature_birthName:
+        team === "Red"
+          ? npcNames[Math.floor(Math.random() * npcNames.length)]
+          : creature_name,
+    }));
+    dispatch({ type: "BATTLE", payload: update });
+    event.preventDefault();
+    event.target.reset();
+    document.getElementById("creature").focus();
+  }
+
+  function resetBattle() {
+    dispatch({ type: "RESET_BATTLE" });
+    document.getElementById("creature").select();
+  }
 
   return (
-    <StoreContext.Consumer>
-      {(store) => (
-        <div>
-          <div id="popout-checkbox">
-            <input type="checkbox" onChange={handlePopoutSetting} checked={battleDisplay === "popout" ? true : false} value={battleDisplay} id="popout-setting" />
-            <label htmlFor="popout-setting">Pop out the battleground</label>
-          </div>
-          <form
-            className="pure-form battle-form"
-            onSubmit={handleUserInput}
-            id="battleInput"
-          >
-            <Autocomplete
-              suggestions={monstersInitHPDB.map((entry) => entry.label)}
-              onBlur={setHP}
-            />
+    <div>
+      <div id="popout-checkbox">
+        <input
+          type="checkbox"
+          onChange={() => setBattleDisplay((d) => d === "popout" ? "inline" : "popout")}
+          checked={battleDisplay === "popout"}
+          id="popout-setting"
+        />
+        <label htmlFor="popout-setting">Pop out the battleground</label>
+      </div>
+      <form className="pure-form battle-form" onSubmit={handleUserInput} id="battleInput">
+        <Autocomplete
+          suggestions={monstersInitHPDB.map((entry) => entry.label)}
+          onBlur={setHP}
+        />
+        <select name="team" required defaultValue="">
+          <option value="" disabled>Team</option>
+          <option style={{ color: "blue" }} value="Blue">PCs</option>
+          <option style={{ color: "red" }} value="Red">Enemies</option>
+        </select>
+        <input
+          type="text"
+          name="initiative_roll"
+          id="initiative_roll"
+          placeholder="Initiative roll"
+          onFocus={rollInitiative}
+        />
+        <input type="text" name="hit_points" placeholder="Hit points" id="hit_points" />
+        <input type="number" name="qty" placeholder="Qty" id="qty" min="1" />
+        <button type="submit" className="pure-button pure-button-primary">ADD</button>
+      </form>
 
-            <select name="team" required defaultValue="">
-              <option value="" disabled>
-                Team
-              </option>
-              <option style={{ color: "blue" }} value="Blue">
-                PCs
-              </option>
-              <option style={{ color: "red" }} value="Red">
-                Enemies
-              </option>
-            </select>
-            <input
-              type="text"
-              name="initiative_roll"
-              id="initiative_roll"
-              placeholder="Initiative roll"
-              onFocus={rollInitiative}
-            />
-            <input
-              type="text"
-              name="hit_points"
-              placeholder="Hit points"
-              id="hit_points"
-            />
-            <input
-              type="number"
-              name="qty"
-              placeholder="Qty"
-              id="qty"
-              min="1"
-            />
-            <button type="submit" className="pure-button pure-button-primary">
-              ADD
-            </button>
-          </form>
-          {/* COMMENT THIS TO FOR BATTLEGROUND DEVELOPMENT  */}
-          {_Store.getState().battle.length >= 1 && (
-          // {(
-            <>
-              <table className="pure-table battle-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Initiative</th>
-                    <th>HP</th>
-                    <th>State</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {_Store
-                    .getState()
-                    .battle.sort(initiativeSortFunction)
-                    .map((item) => (
-                      <tr key={item.id}>
-                        <td>{_Store.getState().battle.indexOf(item) + 1}</td>
-                        <td>{item.creature_name}</td>
-                        <td>{item.initiative_roll}</td>
-                        <td>
-                          <div
-                            contentEditable
-                            suppressContentEditableWarning={true}
-                          >
-                            {item.hit_points}
-                          </div>
-                        </td>
-                        <td>
-                          <div
-                            contentEditable
-                            suppressContentEditableWarning={true}
-                          >
-                            -
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              { battleDisplay === "inline" && <Battleground />}
-              { battleDisplay === "popout" && (
-                <NewWindow 
-                  title="Battle"
-                  center="screen"
-                  // onUnload={setBattleDisplay("inline")}
-                >
-                  <Battleground />
-                </NewWindow>
-              )}
-            </>
+      {battle.length >= 1 && (
+        <>
+          <table className="pure-table battle-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Initiative</th>
+                <th>HP</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody>
+              {battle.slice().sort(initiativeSortFunction).map((item, idx) => (
+                <tr key={item.id}>
+                  <td>{idx + 1}</td>
+                  <td>{item.creature_name}</td>
+                  <td>{item.initiative_roll}</td>
+                  <td>
+                    <div contentEditable suppressContentEditableWarning={true}>
+                      {item.hit_points}
+                    </div>
+                  </td>
+                  <td>
+                    <div contentEditable suppressContentEditableWarning={true}>-</div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button type="reset" className="pure-button" onClick={resetBattle}>
+            Reset battle
+          </button>
+          {battleDisplay === "inline" && <Battleground />}
+          {battleDisplay === "popout" && (
+            <NewWindow title="Battle" center="screen">
+              <Battleground />
+            </NewWindow>
           )}
-        </div>
+        </>
       )}
-    </StoreContext.Consumer>
+    </div>
   );
 };

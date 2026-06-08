@@ -1,17 +1,10 @@
 import React, { useEffect } from "react";
-import StoreContext from "../StoreContext";
-import { _Store } from "../Store";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Fuse from "fuse.js";
 import { Popup } from "./Popup";
 
-// UTILS ----------------------------------------------------------------
-
-function handleUserInput(event) {
-  _Store.dispatch({ type: "QUERY", payload: event.target.value });
-}
-
-const options = {
+const fuseOptions = {
   shouldSort: true,
   threshold: 0.2,
   location: 0,
@@ -20,11 +13,6 @@ const options = {
   minMatchCharLength: 3,
   keys: ["entries"],
 };
-
-function showPopup(path) {
-  _Store.dispatch({ type: "CLICK", payload: path });
-  return <Popup />;
-}
 
 function generatePath(section, name) {
   section = section
@@ -44,78 +32,68 @@ function generatePath(section, name) {
 }
 
 export const Form = () => {
-  // DATA FETCH --(after render)------------------------------------------
+  const dispatch = useDispatch();
+  const db = useSelector((state) => state.db);
+  const query = useSelector((state) => state.query);
+  const click = useSelector((state) => state.click);
 
   useEffect(() => {
     (async () => {
       const response = await axios.get(`/data2.json`);
       const db_light = response.data
-        .map((o) => {
-          return {
-            section: o.section,
-            entries: o.results.map((o) => o.result.name),
-          };
-        })
+        .map((o) => ({
+          section: o.section,
+          entries: o.results.map((o) => o.result.name),
+        }))
         .filter((e) => e != null)
         .filter(
           (e) =>
             e.section !== "spellcasting" && e.section !== "starting-equipment"
         );
-      _Store.dispatch({ type: "GETDATA_DB", payload: db_light });
+      dispatch({ type: "GETDATA_DB", payload: db_light });
     })();
-    return () => {}; // abort function (does nothing, can theoretically be removed)
-  }, []);
+  }, [dispatch]);
 
-  // SEARCH -------------------------------------------------------------
+  const fuse = new Fuse(db, fuseOptions);
+  const fuseResults = db ? fuse.search(query) : [];
 
-  const fuse = new Fuse(_Store.getState().db, options);
-  const _db = _Store.getState().db;
-  const q = _Store.getState().query;
-  const fuseResults = _db ? fuse.search(q) : [];
+  function handleUserInput(event) {
+    dispatch({ type: "QUERY", payload: event.target.value });
+  }
 
-  //   _db ? console.log("Fuse results: ", fuseResults) : console.log("");
-
-  // RENDER -------------------------------------------------------------
+  function showPopup(path) {
+    dispatch({ type: "CLICK", payload: path });
+  }
 
   return (
-    <StoreContext.Consumer>
-      {(store) => (
-        <form className="form">
-          <input
-            type="text"
-            id="query-field"
-            placeholder="Type your query here..."
-            onChange={handleUserInput}
-            value={_Store.getState().query}
-            autoFocus
-          />
-
-          <div className="flex-container results">
-            {fuseResults.map((o, idx) => (
-              <pre key={idx}>
-                <p>{o.section.toUpperCase()}</p>
-                <ul>
-                  {o.entries
-                    .filter(
-                      (e) => e.toLowerCase().indexOf(q.toLowerCase()) > -1
-                    )
-                    .map((e, idx) => (
-                      <li key={idx}>
-                        <a
-                          href="/#"
-                          onClick={() => showPopup(generatePath(o.section, e))}
-                        >
-                          {e}
-                        </a>
-                      </li>
-                    ))}
-                </ul>
-              </pre>
-            ))}
-            {_Store.getState().click && <Popup />}
-          </div>
-        </form>
-      )}
-    </StoreContext.Consumer>
+    <form className="form">
+      <input
+        type="text"
+        id="query-field"
+        placeholder="Type your query here..."
+        onChange={handleUserInput}
+        value={query}
+        autoFocus
+      />
+      <div className="flex-container results">
+        {fuseResults.map((o, idx) => (
+          <pre key={idx}>
+            <p>{o.section.toUpperCase()}</p>
+            <ul>
+              {o.entries
+                .filter((e) => e.toLowerCase().indexOf(query.toLowerCase()) > -1)
+                .map((e, idx) => (
+                  <li key={idx}>
+                    <a href="/#" onClick={() => showPopup(generatePath(o.section, e))}>
+                      {e}
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </pre>
+        ))}
+        {click && <Popup />}
+      </div>
+    </form>
   );
 };

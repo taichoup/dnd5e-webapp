@@ -1,27 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import StoreContext from "./StoreContext";
+import { Provider } from "react-redux";
 import { _Store } from "./Store";
 
-_Store.subscribe(() => {
-  doRender();
-});
-
-// _Store.subscribe(() => {
-//     console.log("State updated: %o", _Store.getState());
-// })
-
-const doRender = () => {
-  ReactDOM.render(
-    <StoreContext.Provider value={_Store}>
-      <App />
-    </StoreContext.Provider>,
-    document.getElementById("root")
-  );
-};
-
-// ReactDOM.render(<App />, document.getElementById('root'));
-
-doRender();
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <Provider store={_Store}>
+    <App />
+  </Provider>
+);
