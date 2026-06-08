@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { JsonToTable } from "./JsonToTable";
+import { JsonExplorer } from "./JsonExplorer";
 import { Loader } from "./Loader";
 import { removeUselessProperties, removeNullishValues } from "../utils/apiFormatter";
 
@@ -51,7 +51,7 @@ export const Popup = () => {
     return (
       <div>
         <h2>{results.name}</h2>
-        <JsonToTable json={filteredResults} />
+        <JsonExplorer json={filteredResults} />
       </div>
     );
   }
@@ -59,7 +59,7 @@ export const Popup = () => {
   return (
     <div className="modal" id="modal">
       <div className="modal-content">
-        <button className="close-button" onClick={closePopup}>
+        <button type="button" className="close-button" onClick={closePopup}>
           ⨉
         </button>
         {popupdata ? formatResults(popupdata) : <Loader />}
