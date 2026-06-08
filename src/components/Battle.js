@@ -165,7 +165,7 @@ export const Battle = (props) => {
                     .getState()
                     .battle.sort(initiativeSortFunction)
                     .map((item) => (
-                      <tr key={item.creature_name}>
+                      <tr key={item.id}>
                         <td>{_Store.getState().battle.indexOf(item) + 1}</td>
                         <td>{item.creature_name}</td>
                         <td>{item.initiative_roll}</td>

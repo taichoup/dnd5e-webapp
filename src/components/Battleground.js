@@ -43,7 +43,7 @@ export const Battleground = () => {
                 <div id="creature-layer">
                     {_Store.getState().battle.map((item) => (
                         <Avatar
-                            key={item.creature_name}
+                            key={item.id}
                             name={generateAvatarName(item.creature_name)}
                             team={item.team}
                             firstName={item.creature_birthName}
