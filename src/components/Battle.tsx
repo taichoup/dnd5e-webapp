@@ -2,52 +2,64 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Battleground } from "./Battleground";
 import Autocomplete from "./Autocomplete";
-import NewWindow from 'react-new-window';
+import NewWindowBase from 'react-new-window';
+import type { PropsWithChildren } from "react";
 import { monstersInitHPDB } from '../assets/monsters';
 import { npcNames } from '../assets/npcs';
+import type { AppAction, AppState, BattleEntry } from "../types";
+import type { Dispatch } from "redux";
 
-function initiativeSortFunction(a, b) {
-  return b.initiative_roll - a.initiative_roll;
+const NewWindow = NewWindowBase as unknown as React.ComponentType<
+  PropsWithChildren<{ title?: string; center?: "parent" | "screen" }>
+>;
+
+function initiativeSortFunction(a: BattleEntry, b: BattleEntry): number {
+  return Number(b.initiative_roll) - Number(a.initiative_roll);
 }
 
-function matchingCreaturesInDb(creature) {
+function matchingCreaturesInDb(creature: string) {
   return monstersInitHPDB.filter((c) => c.label === creature);
 }
 
-function getModifier(abilityScore) {
+function getModifier(abilityScore: number): number {
   return Math.floor((abilityScore - 10) / 2);
 }
 
-function rollInitiative() {
-  const creature = document.getElementById("creature").value;
+function rollInitiative(): number | undefined {
+  const creature = (document.getElementById("creature") as HTMLInputElement | null)?.value ?? "";
   if (matchingCreaturesInDb(creature).length) {
     const dex = matchingCreaturesInDb(creature)[0].dex;
     const modifier = getModifier(dex);
     const roll = Math.floor(Math.random() * 20) + modifier;
-    document.getElementById("initiative_roll").value = roll;
+    const initiative = document.getElementById("initiative_roll") as HTMLInputElement | null;
+    if (initiative) initiative.value = String(roll);
     return roll;
   }
 }
 
-function setHP(event) {
-  const creature = event.target.value;
+function setHP(event: React.FocusEvent<HTMLInputElement>) {
+  const creature = event.currentTarget.value;
   if (matchingCreaturesInDb(creature).length) {
     const hp = matchingCreaturesInDb(creature)[0].hp;
-    document.getElementById("hit_points").value = hp;
+    const hitPoints = document.getElementById("hit_points") as HTMLInputElement | null;
+    if (hitPoints) hitPoints.value = String(hp);
   }
 }
 
 export const Battle = () => {
-  const dispatch = useDispatch();
-  const battle = useSelector((state) => state.battle);
-  const [battleDisplay, setBattleDisplay] = useState("inline");
+  const dispatch = useDispatch<Dispatch<AppAction>>();
+  const battle = useSelector((state: AppState) => state.battle);
+  const [battleDisplay, setBattleDisplay] = useState<"inline" | "popout">("inline");
 
-  function handleUserInput(event) {
-    const creature_name = event.target["creature_name"].value;
-    const initiative_roll = event.target["initiative_roll"].value;
-    const hit_points = event.target["hit_points"].value;
-    const team = event.target["team"].value;
-    const quantity = Number(event.target["qty"].value) || 1;
+  function handleUserInput(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const creature_name = String(formData.get("creature_name") ?? "");
+    const initiative_roll = String(formData.get("initiative_roll") ?? "");
+    const hit_points = String(formData.get("hit_points") ?? "");
+    const team = String(formData.get("team") ?? "");
+    const quantity = Number(formData.get("qty")) || 1;
     const update = [...Array(quantity)].map((_, idx) => ({
       creature_name: `${creature_name} ${quantity > 1 ? idx + 1 : ""}`,
       initiative_roll,
@@ -59,14 +71,13 @@ export const Battle = () => {
           : creature_name,
     }));
     dispatch({ type: "BATTLE", payload: update });
-    event.preventDefault();
-    event.target.reset();
-    document.getElementById("creature").focus();
+    form.reset();
+    document.getElementById("creature")?.focus();
   }
 
   function resetBattle() {
     dispatch({ type: "RESET_BATTLE" });
-    document.getElementById("creature").select();
+    (document.getElementById("creature") as HTMLInputElement | null)?.select();
   }
 
   return (

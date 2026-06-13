@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 
-const Autocomplete = ({ suggestions = [], onBlur }) => {
+interface AutocompleteProps {
+  suggestions?: string[];
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+}
+
+const Autocomplete = ({ suggestions = [], onBlur }: AutocompleteProps) => {
   const [activeSuggestion, setActiveSuggestion] = useState(0);
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [userInput, setUserInput] = useState("");
 
-  function onChange(e) {
+  function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const input = e.currentTarget.value;
     const filtered = suggestions.filter(
       (s) => s.toLowerCase().indexOf(input.toLowerCase()) > -1
@@ -18,23 +22,23 @@ const Autocomplete = ({ suggestions = [], onBlur }) => {
     setUserInput(input);
   }
 
-  function onClick(e) {
+  function onClick(e: React.MouseEvent<HTMLLIElement>) {
     setActiveSuggestion(0);
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setUserInput(e.currentTarget.innerText);
   }
 
-  function onKeyDown(e) {
-    if (e.keyCode === 13) {
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
       e.preventDefault();
       setActiveSuggestion(0);
       setShowSuggestions(false);
       setUserInput(filteredSuggestions[activeSuggestion]);
-    } else if (e.keyCode === 38) {
+    } else if (e.key === "ArrowUp") {
       if (activeSuggestion === 0) return;
       setActiveSuggestion(activeSuggestion - 1);
-    } else if (e.keyCode === 40) {
+    } else if (e.key === "ArrowDown") {
       if (activeSuggestion + 1 === filteredSuggestions.length) return;
       setActiveSuggestion(activeSuggestion + 1);
     }
@@ -72,10 +76,6 @@ const Autocomplete = ({ suggestions = [], onBlur }) => {
       {suggestionsListComponent}
     </div>
   );
-};
-
-Autocomplete.propTypes = {
-  suggestions: PropTypes.instanceOf(Array),
 };
 
 export default Autocomplete;

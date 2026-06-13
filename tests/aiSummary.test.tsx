@@ -10,13 +10,16 @@ vi.mock("../src/utils/browserSummary", () => ({
   getSummaryAvailability: vi.fn(),
 }));
 
+const mockGetSummaryAvailability = vi.mocked(getSummaryAvailability);
+const mockGenerateResourceSummary = vi.mocked(generateResourceSummary);
+
 describe("AiSummary", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   test("disables generation when browser AI is unavailable", async () => {
-    getSummaryAvailability.mockResolvedValue("unavailable");
+    mockGetSummaryAvailability.mockResolvedValue("unavailable");
 
     render(<AiSummary resource={{ name: "Frost Giant" }} />);
 
@@ -24,12 +27,12 @@ describe("AiSummary", () => {
       await screen.findByText("Browser AI is not available on this browser or device.")
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Generate overview" })).toBeDisabled();
-    expect(generateResourceSummary).not.toHaveBeenCalled();
+    expect(mockGenerateResourceSummary).not.toHaveBeenCalled();
   });
 
   test("generates section cards only after the user requests them", async () => {
-    getSummaryAvailability.mockResolvedValue("available");
-    generateResourceSummary.mockResolvedValue({
+    mockGetSummaryAvailability.mockResolvedValue("available");
+    mockGenerateResourceSummary.mockResolvedValue({
       overview: "A dangerous giant.",
       sections: [{ heading: "Combat", facts: ["Armor Class 15"] }],
       caveats: ["Cold immunity"],
@@ -38,22 +41,22 @@ describe("AiSummary", () => {
     render(<AiSummary resource={{ name: "Frost Giant" }} />);
 
     const button = await screen.findByRole("button", { name: "Generate overview" });
-    expect(generateResourceSummary).not.toHaveBeenCalled();
+    expect(mockGenerateResourceSummary).not.toHaveBeenCalled();
     fireEvent.click(button);
 
     expect(await screen.findByText("A dangerous giant.")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Combat" })).toBeInTheDocument();
     expect(screen.getByText("Armor Class 15")).toBeInTheDocument();
     expect(screen.getByText("Cold immunity")).toBeInTheDocument();
-    expect(generateResourceSummary).toHaveBeenCalledWith(
+    expect(mockGenerateResourceSummary).toHaveBeenCalledWith(
       { name: "Frost Giant" },
       expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
   });
 
   test("safely renders the supported inline Markdown subset", async () => {
-    getSummaryAvailability.mockResolvedValue("available");
-    generateResourceSummary.mockResolvedValue({
+    mockGetSummaryAvailability.mockResolvedValue("available");
+    mockGenerateResourceSummary.mockResolvedValue({
       overview: "A **dangerous** dragon.",
       sections: [
         {
@@ -74,15 +77,15 @@ describe("AiSummary", () => {
     expect(screen.getByText("7d8+7").tagName).toBe("CODE");
     expect(screen.getByText("Verify exact rules below.").tagName).toBe("EM");
     expect(container.querySelector(".ai-summary-card br")).toBeInTheDocument();
-    expect(container.querySelector(".ai-summary-result").textContent).not.toContain("**");
+    expect(container.querySelector(".ai-summary-result")?.textContent).not.toContain("**");
   });
 
   test("aborts an in-progress generation when unmounted", async () => {
-    getSummaryAvailability.mockResolvedValue("available");
-    generateResourceSummary.mockImplementation(
-      (_resource, { signal }) =>
+    mockGetSummaryAvailability.mockResolvedValue("available");
+    mockGenerateResourceSummary.mockImplementation(
+      (_resource, { signal } = {}) =>
         new Promise((_resolve, reject) => {
-          signal.addEventListener("abort", () =>
+          signal?.addEventListener("abort", () =>
             reject(new DOMException("Aborted", "AbortError"))
           );
         })
@@ -90,11 +93,11 @@ describe("AiSummary", () => {
 
     const { unmount } = render(<AiSummary resource={{ name: "Frost Giant" }} />);
     fireEvent.click(await screen.findByRole("button", { name: "Generate overview" }));
-    await waitFor(() => expect(generateResourceSummary).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockGenerateResourceSummary).toHaveBeenCalledOnce());
 
-    const signal = generateResourceSummary.mock.calls[0][1].signal;
+    const signal = mockGenerateResourceSummary.mock.calls[0][1]?.signal;
     unmount();
 
-    expect(signal.aborted).toBe(true);
+    expect(signal?.aborted).toBe(true);
   });
 });

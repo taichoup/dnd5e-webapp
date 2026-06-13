@@ -1,7 +1,13 @@
 import React from "react";
 import Draggable from "react-draggable";
 
-export const Avatar = (props) => {
+interface AvatarProps {
+  team: string;
+  name: string;
+  firstName: string;
+}
+
+export const Avatar = (props: AvatarProps) => {
   return (
     // <Draggable grid={[25, 25]}>
     <Draggable>

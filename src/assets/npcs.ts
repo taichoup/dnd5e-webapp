@@ -1,4 +1,4 @@
-export const npcNames = [
+export const npcNames: string[] = [
     "Aalis",
     "Abbaud",
     "Abbe",

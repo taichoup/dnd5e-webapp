@@ -43,7 +43,10 @@ describe("browserSummary", () => {
     globalThis.LanguageModel = {
       create: vi.fn(async ({ monitor }) => {
         monitor({
-          addEventListener: (_name, listener) => listener({ loaded: 0.42 }),
+          addEventListener: (
+            _name: "downloadprogress",
+            listener: (event: { loaded: number }) => void
+          ) => listener({ loaded: 0.42 }),
         });
         return {
           prompt: vi.fn().mockResolvedValue(
@@ -52,7 +55,7 @@ describe("browserSummary", () => {
           destroy: vi.fn(),
         };
       }),
-    };
+    } as unknown as LanguageModelApi;
 
     await generateResourceSummary({}, { onDownloadProgress });
 
@@ -66,7 +69,7 @@ describe("browserSummary", () => {
         prompt: vi.fn().mockRejectedValue(new DOMException("Too large", "QuotaExceededError")),
         destroy,
       }),
-    };
+    } as unknown as LanguageModelApi;
 
     await expect(generateResourceSummary({})).rejects.toMatchObject({
       name: "QuotaExceededError",
@@ -81,7 +84,7 @@ describe("browserSummary", () => {
         prompt: vi.fn().mockResolvedValue("not json"),
         destroy,
       }),
-    };
+    } as unknown as LanguageModelApi;
 
     await expect(generateResourceSummary({})).rejects.toBeInstanceOf(SyntaxError);
     expect(destroy).toHaveBeenCalledOnce();

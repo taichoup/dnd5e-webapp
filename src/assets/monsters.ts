@@ -1,4 +1,10 @@
-export const monstersInitHPDB = [
+export interface MonsterSummary {
+    label: string;
+    dex: number;
+    hp: number;
+}
+
+export const monstersInitHPDB: MonsterSummary[] = [
     {
         label: "Aboleth",
         dex: 9,

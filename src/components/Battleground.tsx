@@ -2,8 +2,10 @@ import React, { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Avatar } from "./Avatar";
 import CanvasDraw from "react-canvas-draw";
+import type { AppAction, AppState } from "../types";
+import type { Dispatch } from "redux";
 
-function generateAvatarName(avatarName) {
+function generateAvatarName(avatarName: string): string {
   const avatarArray = avatarName.trim().split(" ");
   if (avatarArray.length > 1) {
     return avatarArray.map((elt) => elt[0]).join("");
@@ -12,21 +14,21 @@ function generateAvatarName(avatarName) {
 }
 
 export const Battleground = () => {
-  const dispatch = useDispatch();
-  const battle = useSelector((state) => state.battle);
-  const canvas = useRef(null);
+  const dispatch = useDispatch<Dispatch<AppAction>>();
+  const battle = useSelector((state: AppState) => state.battle);
+  const canvas = useRef<CanvasDraw | null>(null);
 
   function resetBattle() {
     dispatch({ type: "RESET_BATTLE" });
-    document.getElementById("creature").select();
+    (document.getElementById("creature") as HTMLInputElement | null)?.select();
   }
 
   function resetCanvas() {
-    canvas.current.clear();
+    canvas.current?.clear();
   }
 
   function undoCanvas() {
-    canvas.current.undo();
+    canvas.current?.undo();
   }
 
   return (

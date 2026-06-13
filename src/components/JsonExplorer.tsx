@@ -1,36 +1,38 @@
 import React, { createContext, useContext, useState } from "react";
 import "./JsonExplorer.css";
+import type { JsonObject, JsonPrimitive, JsonValue } from "../types";
 
 const ExplorerContext = createContext({ defaultOpen: false });
 
-const isPrimitive = (v) => v === null || typeof v !== "object";
-const isArray = (v) => Array.isArray(v);
+const isPrimitive = (value: JsonValue): value is JsonPrimitive =>
+  value === null || typeof value !== "object";
+const isArray = (value: JsonValue): value is JsonValue[] => Array.isArray(value);
 
-const formatKey = (key) =>
+const formatKey = (key: string): string =>
   key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
 // True when an object has exactly one property and its value is a primitive.
-const isSinglePrimitive = (v) =>
-  !isArray(v) &&
-  v !== null &&
-  typeof v === "object" &&
-  Object.keys(v).length === 1 &&
-  isPrimitive(Object.values(v)[0]);
+const isSinglePrimitive = (value: JsonValue): value is JsonObject =>
+  !isArray(value) &&
+  value !== null &&
+  typeof value === "object" &&
+  Object.keys(value).length === 1 &&
+  isPrimitive(Object.values(value)[0]);
 
-const findNameInObject = (obj) => {
+const findNameInObject = (obj: JsonObject): string | null => {
   const key = Object.keys(obj).find(
     (k) => k.toLowerCase().includes("name") && isPrimitive(obj[k])
   );
   return key ? String(obj[key]) : null;
 };
 
-const findLabel = (item, index) => {
+const findLabel = (item: JsonObject | JsonValue[], index: number): string => {
   if (isArray(item)) return `Group ${index + 1}`;
   const direct = findNameInObject(item);
   if (direct) return direct;
   for (const value of Object.values(item)) {
     if (value && !isArray(value) && typeof value === "object") {
-      const nested = findNameInObject(value);
+      const nested = findNameInObject(value as JsonObject);
       if (nested) return nested;
     }
   }
@@ -39,7 +41,7 @@ const findLabel = (item, index) => {
 
 // --- Leaf nodes ---
 
-const PrimitiveList = ({ items }) => (
+const PrimitiveList = ({ items }: { items: JsonPrimitive[] }) => (
   <ul className="je-primitive-list">
     {items.map((item, i) => (
       <li key={i}>{String(item)}</li>
@@ -49,7 +51,12 @@ const PrimitiveList = ({ items }) => (
 
 // --- Collapsible array item ---
 
-const ArrayItem = ({ label, data, depth }) => {
+interface NodeProps {
+  data: JsonValue;
+  depth: number;
+}
+
+const ArrayItem = ({ label, data, depth }: NodeProps & { label: string }) => {
   const { defaultOpen } = useContext(ExplorerContext);
   const [open, setOpen] = useState(defaultOpen);
   return (
@@ -70,7 +77,7 @@ const ArrayItem = ({ label, data, depth }) => {
 // --- Array renderer ---
 // Decides per-item whether to show a bullet list or collapsible cards.
 
-const ArrayNode = ({ data, depth }) => {
+const ArrayNode = ({ data, depth }: { data: JsonValue[]; depth: number }) => {
   if (data.length === 0) return <span className="je-empty">None</span>;
 
   // If every item is a primitive, render a flat list.
@@ -80,7 +87,7 @@ const ArrayNode = ({ data, depth }) => {
   if (data.every((item) => isPrimitive(item) || isSinglePrimitive(item))) {
     return (
       <PrimitiveList
-        items={data.map((item) =>
+        items={data.map((item): JsonPrimitive =>
           isPrimitive(item) ? String(item) : String(Object.values(item)[0])
         )}
       />
@@ -99,7 +106,7 @@ const ArrayNode = ({ data, depth }) => {
         ) : (
           <ArrayItem
             key={i}
-            label={findLabel(item, i)}
+            label={findLabel(item as JsonObject | JsonValue[], i)}
             data={item}
             depth={depth}
           />
@@ -111,7 +118,7 @@ const ArrayNode = ({ data, depth }) => {
 
 // --- Object renderer ---
 
-const ObjectNode = ({ data, depth = 0 }) => {
+const ObjectNode = ({ data, depth = 0 }: { data: JsonObject; depth?: number }) => {
   if (data === null || data === undefined) return null;
   return (
     <div>
@@ -124,16 +131,24 @@ const ObjectNode = ({ data, depth = 0 }) => {
 
 // --- Generic node: dispatches to the right renderer ---
 
-const Node = ({ data, depth }) => {
+const Node = ({ data, depth }: NodeProps) => {
   if (data === null || data === undefined) return null;
   if (isPrimitive(data)) return <span className="je-prop-value">{String(data)}</span>;
   if (isArray(data)) return <ArrayNode data={data} depth={depth} />;
-  return <ObjectNode data={data} depth={depth} />;
+  return <ObjectNode data={data as JsonObject} depth={depth} />;
 };
 
 // --- Property row: one key + its value ---
 
-const PropertyRow = ({ label, value, depth }) => {
+const PropertyRow = ({
+  label,
+  value,
+  depth,
+}: {
+  label: string;
+  value: JsonValue;
+  depth: number;
+}) => {
   if (isPrimitive(value)) {
     return (
       <div className="je-prop-row">
@@ -170,7 +185,7 @@ const PropertyRow = ({ label, value, depth }) => {
     <div className="je-section">
       <div className="je-section-header">{formatKey(label)}</div>
       <div className="je-nested">
-        <ObjectNode data={value} depth={depth + 1} />
+        <ObjectNode data={value as JsonObject} depth={depth + 1} />
       </div>
     </div>
   );
@@ -178,7 +193,13 @@ const PropertyRow = ({ label, value, depth }) => {
 
 // --- Public API ---
 
-export const JsonExplorer = ({ json, defaultOpen = false }) => (
+export const JsonExplorer = ({
+  json,
+  defaultOpen = false,
+}: {
+  json: JsonObject;
+  defaultOpen?: boolean;
+}) => (
   <ExplorerContext.Provider value={{ defaultOpen }}>
     <div className="je-root">
       <ObjectNode data={json} depth={0} />

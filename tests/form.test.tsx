@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { Form } from "../src/components/Form";
+import type { AppAction, AppState } from "../src/types";
 
 const initialState = {
   query: "",
@@ -13,7 +14,7 @@ const initialState = {
   battle: [],
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: AppState = initialState, action: AppAction): AppState => {
   switch (action.type) {
     case "QUERY":
       return { ...state, query: action.payload };
@@ -26,7 +27,7 @@ const reducer = (state = initialState, action) => {
 
 describe("Form search", () => {
   test("accepts input before the search data has loaded", async () => {
-    globalThis.fetch = vi.fn(() => new Promise(() => {}));
+    globalThis.fetch = vi.fn(() => new Promise<Response>(() => {}));
     const store = createStore(reducer);
     const user = userEvent.setup();
 
@@ -54,7 +55,7 @@ describe("Form search", () => {
           ],
         },
       ]),
-    });
+    } as unknown as Response);
     const store = createStore(reducer);
     const user = userEvent.setup();
 

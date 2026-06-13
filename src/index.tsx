@@ -5,7 +5,9 @@ import App from "./App";
 import { Provider } from "react-redux";
 import { _Store } from "./Store";
 
-const root = createRoot(document.getElementById("root"));
+const rootElement = document.getElementById("root");
+if (!rootElement) throw new Error("Root element not found.");
+const root = createRoot(rootElement);
 root.render(
   <Provider store={_Store}>
     <App />

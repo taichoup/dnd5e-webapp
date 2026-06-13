@@ -44,9 +44,9 @@ Preserve important numbers, dice expressions, limitations, and rules wording.
 Do not invent facts or use outside knowledge. Omit sections that are not useful.
 You may use **bold**, *italic*, and \`inline code\` within text, but no other Markdown.`;
 
-export const getLanguageModel = () => globalThis.LanguageModel;
+export const getLanguageModel = (): LanguageModelApi | undefined => globalThis.LanguageModel;
 
-export async function getSummaryAvailability() {
+export async function getSummaryAvailability(): Promise<string> {
   const LanguageModel = getLanguageModel();
   if (!LanguageModel?.availability) return "unavailable";
 
@@ -60,7 +60,15 @@ export async function getSummaryAvailability() {
   }
 }
 
-export async function generateResourceSummary(resource, { signal, onDownloadProgress } = {}) {
+interface GenerateSummaryOptions {
+  signal?: AbortSignal;
+  onDownloadProgress?: (progress: number) => void;
+}
+
+export async function generateResourceSummary(
+  resource: JsonObject,
+  { signal, onDownloadProgress }: GenerateSummaryOptions = {}
+): Promise<ResourceSummary> {
   const LanguageModel = getLanguageModel();
   if (!LanguageModel?.create) {
     throw new Error("Browser AI is not available.");
@@ -86,8 +94,9 @@ export async function generateResourceSummary(resource, { signal, onDownloadProg
         responseConstraint: SUMMARY_SCHEMA,
       }
     );
-    return JSON.parse(result);
+    return JSON.parse(result) as ResourceSummary;
   } finally {
     session.destroy();
   }
 }
+import type { JsonObject, ResourceSummary } from "../types";

@@ -2,8 +2,10 @@ import React, { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Fuse from "fuse.js";
 import { Popup } from "./Popup";
+import type { AppAction, ApiSearchSection, AppState, SearchSection } from "../types";
+import type { Dispatch } from "redux";
 
-const fuseOptions = {
+const fuseOptions: Fuse.FuseOptions<SearchSection> = {
   shouldSort: true,
   threshold: 0.2,
   location: 0,
@@ -13,7 +15,7 @@ const fuseOptions = {
   keys: ["entries"],
 };
 
-function generatePath(section, name) {
+function generatePath(section: string, name: string): string {
   section = section
     .toLowerCase()
     .replace(/'s/g, "s")
@@ -31,15 +33,15 @@ function generatePath(section, name) {
 }
 
 export const Form = () => {
-  const dispatch = useDispatch();
-  const db = useSelector((state) => state.db);
-  const query = useSelector((state) => state.query);
-  const click = useSelector((state) => state.click);
+  const dispatch = useDispatch<Dispatch<AppAction>>();
+  const db = useSelector((state: AppState) => state.db);
+  const query = useSelector((state: AppState) => state.query);
+  const click = useSelector((state: AppState) => state.click);
 
   useEffect(() => {
     (async () => {
       const response = await fetch(`/data2.json`);
-      const data = await response.json();
+      const data = (await response.json()) as ApiSearchSection[];
       const db_light = data
         .map((o) => ({
           section: o.section,
@@ -54,14 +56,19 @@ export const Form = () => {
     })();
   }, [dispatch]);
 
-  const fuse = useMemo(() => (db ? new Fuse(db, fuseOptions) : null), [db]);
-  const fuseResults = fuse && query ? fuse.search(query) : [];
+  const fuse = useMemo(
+    () => (db ? new Fuse<SearchSection, Fuse.FuseOptions<SearchSection>>(db, fuseOptions) : null),
+    [db]
+  );
+  const fuseResults: SearchSection[] = fuse
+    ? fuse.search<SearchSection, false, false>(query)
+    : [];
 
-  function handleUserInput(event) {
-    dispatch({ type: "QUERY", payload: event.target.value });
+  function handleUserInput(event: React.ChangeEvent<HTMLInputElement>) {
+    dispatch({ type: "QUERY", payload: event.currentTarget.value });
   }
 
-  function showPopup(path) {
+  function showPopup(path: string) {
     dispatch({ type: "CLICK", payload: path });
   }
 
@@ -84,7 +91,13 @@ export const Form = () => {
                 .filter((e) => e.toLowerCase().indexOf(query.toLowerCase()) > -1)
                 .map((e, idx) => (
                   <li key={idx}>
-                    <a href="/#" onClick={() => showPopup(generatePath(o.section, e))}>
+                    <a
+                      href="/#"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        showPopup(generatePath(o.section, e));
+                      }}
+                    >
                       {e}
                     </a>
                   </li>

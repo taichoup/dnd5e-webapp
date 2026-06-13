@@ -3,8 +3,12 @@ import {
   generateResourceSummary,
   getSummaryAvailability,
 } from "../utils/browserSummary";
+import type { JsonObject, ResourceSummary } from "../types";
 
-const availabilityLabels = {
+type Availability = "checking" | "available" | "downloadable" | "downloading" | "unavailable";
+type SummaryStatus = "idle" | "generating" | "complete" | "error";
+
+const availabilityLabels: Partial<Record<Availability, string>> = {
   downloadable: "The browser AI model will be downloaded before generating the overview.",
   downloading: "The browser AI model is currently downloading.",
   unavailable: "Browser AI is not available on this browser or device.",
@@ -12,7 +16,7 @@ const availabilityLabels = {
 
 const inlineMarkdownPattern = /(\*\*[^*\n]+\*\*|`[^`\n]+`|\*[^*\n]+\*|\n)/g;
 
-export const InlineMarkdown = ({ text }) => (
+export const InlineMarkdown = ({ text }: { text: string }) => (
   <>
     {text.split(inlineMarkdownPattern).map((part, index) => {
       if (part === "\n") return <br key={index} />;
@@ -30,13 +34,13 @@ export const InlineMarkdown = ({ text }) => (
   </>
 );
 
-export const AiSummary = ({ resource }) => {
-  const [availability, setAvailability] = useState("checking");
-  const [status, setStatus] = useState("idle");
-  const [downloadProgress, setDownloadProgress] = useState(null);
-  const [summary, setSummary] = useState(null);
+export const AiSummary = ({ resource }: { resource: JsonObject }) => {
+  const [availability, setAvailability] = useState<Availability>("checking");
+  const [status, setStatus] = useState<SummaryStatus>("idle");
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
+  const [summary, setSummary] = useState<ResourceSummary | null>(null);
   const [error, setError] = useState("");
-  const abortController = useRef(null);
+  const abortController = useRef<AbortController | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -47,7 +51,7 @@ export const AiSummary = ({ resource }) => {
     setError("");
     setAvailability("checking");
     getSummaryAvailability().then((value) => {
-      if (active) setAvailability(value);
+      if (active) setAvailability(value as Availability);
     });
     return () => {
       active = false;
@@ -71,7 +75,12 @@ export const AiSummary = ({ resource }) => {
       setSummary(result);
       setStatus("complete");
       setAvailability("available");
-    } catch (generationError) {
+    } catch (generationError: unknown) {
+      if (!(generationError instanceof Error || generationError instanceof DOMException)) {
+        setError("The browser AI could not generate an overview.");
+        setStatus("error");
+        return;
+      }
       if (generationError.name === "AbortError") return;
       setError(
         generationError.name === "QuotaExceededError"
