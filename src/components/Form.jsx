@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import Fuse from "fuse.js";
 import { Popup } from "./Popup";
 
@@ -39,8 +38,7 @@ export const Form = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get(`/data2.json`);
-      const db_light = response.data
+      const db_light = await fetch(`/data2.json`).then((r) => r.json())
         .map((o) => ({
           section: o.section,
           entries: o.results.map((o) => o.result.name),
