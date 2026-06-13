@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Fuse from "fuse.js";
 import { Popup } from "./Popup";
@@ -38,7 +38,9 @@ export const Form = () => {
 
   useEffect(() => {
     (async () => {
-      const db_light = await fetch(`/data2.json`).then((r) => r.json())
+      const response = await fetch(`/data2.json`);
+      const data = await response.json();
+      const db_light = data
         .map((o) => ({
           section: o.section,
           entries: o.results.map((o) => o.result.name),
@@ -52,8 +54,8 @@ export const Form = () => {
     })();
   }, [dispatch]);
 
-  const fuse = new Fuse(db, fuseOptions);
-  const fuseResults = db ? fuse.search(query) : [];
+  const fuse = useMemo(() => (db ? new Fuse(db, fuseOptions) : null), [db]);
+  const fuseResults = fuse && query ? fuse.search(query) : [];
 
   function handleUserInput(event) {
     dispatch({ type: "QUERY", payload: event.target.value });

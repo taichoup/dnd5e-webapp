@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { AiSummary } from "./AiSummary";
 import { JsonExplorer } from "./JsonExplorer";
 import { Loader } from "./Loader";
 import { removeUselessProperties, removeNullishValues } from "../utils/apiFormatter";
@@ -8,16 +9,19 @@ export const Popup = () => {
   const dispatch = useDispatch();
   const path = useSelector((state) => state.path);
   const popupdata = useSelector((state) => state.popupdata);
+  const [rawPopupdata, setRawPopupdata] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await fetch(path);
         const res_json = await res.json();
-        removeUselessProperties(res_json, "url");
-        removeUselessProperties(res_json, "index");
-        removeNullishValues(res_json);
-        dispatch({ type: "GETDATA_POPUP", payload: res_json });
+        setRawPopupdata(res_json);
+        const formattedData = structuredClone(res_json);
+        removeUselessProperties(formattedData, "url");
+        removeUselessProperties(formattedData, "index");
+        removeNullishValues(formattedData);
+        dispatch({ type: "GETDATA_POPUP", payload: formattedData });
       } catch (error) {
         console.error(error.message);
       }
@@ -51,6 +55,7 @@ export const Popup = () => {
     return (
       <div>
         <h2>{results.name}</h2>
+        {rawPopupdata && <AiSummary resource={rawPopupdata} />}
         <JsonExplorer json={filteredResults} />
       </div>
     );
