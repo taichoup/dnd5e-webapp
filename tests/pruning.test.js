@@ -130,7 +130,7 @@ describe('removeUselessProperties()', () => {
     });
 });
 
-describe.only('removeNullishValues()', () => {
+describe('removeNullishValues()', () => {
     test('it should work', () => {
         const testObject = {
             bla: "mlkmlk",

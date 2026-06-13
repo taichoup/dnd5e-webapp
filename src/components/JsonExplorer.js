@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import "./JsonExplorer.css";
+
+const ExplorerContext = createContext({ defaultOpen: false });
 
 const isPrimitive = (v) => v === null || typeof v !== "object";
 const isArray = (v) => Array.isArray(v);
@@ -28,7 +30,8 @@ const PrimitiveList = ({ items }) => (
 // --- Collapsible array item ---
 
 const ArrayItem = ({ label, data, depth }) => {
-  const [open, setOpen] = useState(false);
+  const { defaultOpen } = useContext(ExplorerContext);
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="je-array-item">
       <button type="button" className="je-toggle" onClick={() => setOpen((o) => !o)}>
@@ -132,8 +135,10 @@ const PropertyRow = ({ label, value, depth }) => {
 
 // --- Public API ---
 
-export const JsonExplorer = ({ json }) => (
-  <div className="je-root">
-    <ObjectNode data={json} depth={0} />
-  </div>
+export const JsonExplorer = ({ json, defaultOpen = false }) => (
+  <ExplorerContext.Provider value={{ defaultOpen }}>
+    <div className="je-root">
+      <ObjectNode data={json} depth={0} />
+    </div>
+  </ExplorerContext.Provider>
 );
