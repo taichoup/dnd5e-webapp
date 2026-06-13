@@ -9,12 +9,32 @@ const isArray = (v) => Array.isArray(v);
 const formatKey = (key) =>
   key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
+// True when an object has exactly one property and its value is a primitive.
+const isSinglePrimitive = (v) =>
+  !isArray(v) &&
+  v !== null &&
+  typeof v === "object" &&
+  Object.keys(v).length === 1 &&
+  isPrimitive(Object.values(v)[0]);
+
+const findNameInObject = (obj) => {
+  const key = Object.keys(obj).find(
+    (k) => k.toLowerCase().includes("name") && isPrimitive(obj[k])
+  );
+  return key ? String(obj[key]) : null;
+};
+
 const findLabel = (item, index) => {
   if (isArray(item)) return `Group ${index + 1}`;
-  const nameKey = Object.keys(item).find(
-    (k) => k.toLowerCase().includes("name") && isPrimitive(item[k])
-  );
-  return nameKey ? String(item[nameKey]) : `Item ${index + 1}`;
+  const direct = findNameInObject(item);
+  if (direct) return direct;
+  for (const value of Object.values(item)) {
+    if (value && !isArray(value) && typeof value === "object") {
+      const nested = findNameInObject(value);
+      if (nested) return nested;
+    }
+  }
+  return `Item ${index + 1}`;
 };
 
 // --- Leaf nodes ---
@@ -56,13 +76,26 @@ const ArrayNode = ({ data, depth }) => {
   // If every item is a primitive, render a flat list.
   if (data.every(isPrimitive)) return <PrimitiveList items={data} />;
 
-  // Otherwise render each item as a collapsible card.
-  // Items that turn out to be primitive (mixed array) fall back to inline text.
+  // Single-primitive objects and plain primitives render as a flat bullet list.
+  if (data.every((item) => isPrimitive(item) || isSinglePrimitive(item))) {
+    return (
+      <PrimitiveList
+        items={data.map((item) =>
+          isPrimitive(item) ? String(item) : String(Object.values(item)[0])
+        )}
+      />
+    );
+  }
+
+  // Otherwise render each item as a collapsible card, with single-primitive
+  // items degraded to inline text for mixed arrays.
   return (
     <div className="je-array">
       {data.map((item, i) =>
-        isPrimitive(item) ? (
-          <div key={i} className="je-prop-value">{String(item)}</div>
+        isPrimitive(item) || isSinglePrimitive(item) ? (
+          <div key={i} className="je-prop-value">
+            {isPrimitive(item) ? String(item) : String(Object.values(item)[0])}
+          </div>
         ) : (
           <ArrayItem
             key={i}
@@ -106,6 +139,16 @@ const PropertyRow = ({ label, value, depth }) => {
       <div className="je-prop-row">
         <span className="je-prop-key">{formatKey(label)}</span>
         <span className="je-prop-value">{String(value)}</span>
+      </div>
+    );
+  }
+
+  // Object with a single primitive property → flatten to an inline row.
+  if (isSinglePrimitive(value)) {
+    return (
+      <div className="je-prop-row">
+        <span className="je-prop-key">{formatKey(label)}</span>
+        <span className="je-prop-value">{String(Object.values(value)[0])}</span>
       </div>
     );
   }
