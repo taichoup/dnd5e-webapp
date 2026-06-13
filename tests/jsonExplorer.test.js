@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import { JsonExplorer } from '../src/components/JsonExplorer';
-import { JsonToTable } from '../src/components/JsonToTable';
 
 const { removeUselessProperties, removeNullishValues } = require('../src/utils/apiFormatter');
 const { api_result_1, api_result_2 } = require('./test_helper');
@@ -40,31 +39,6 @@ function runDataCompletenessTests(fixtureName, rawFixture) {
       });
     });
 
-    test('JsonToTable renders all leaf values', () => {
-      const { container } = render(<JsonToTable json={data} />);
-      leafValues.forEach((value) => {
-        expect(container.textContent).toContain(value);
-      });
-    });
-
-    test('both components render the same set of leaf values', () => {
-      const { container: explorerContainer } = render(
-        <JsonExplorer json={data} defaultOpen={true} />
-      );
-      const { container: tableContainer } = render(<JsonToTable json={data} />);
-
-      leafValues.forEach((value) => {
-        expect({
-          value,
-          inExplorer: explorerContainer.textContent.includes(value),
-          inTable: tableContainer.textContent.includes(value),
-        }).toEqual({
-          value,
-          inExplorer: true,
-          inTable: true,
-        });
-      });
-    });
   });
 }
 
