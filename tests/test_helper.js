@@ -144,7 +144,7 @@ const api_result_2 = {
     "url": "/api/equipment/clothes-fine"
 };
 
-module.exports = {
+export {
     api_result_1,
     api_result_2
 }

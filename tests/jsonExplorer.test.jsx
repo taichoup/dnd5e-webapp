@@ -1,8 +1,7 @@
 import { render } from '@testing-library/react';
 import { JsonExplorer } from '../src/components/JsonExplorer';
-
-const { removeUselessProperties, removeNullishValues } = require('../src/utils/apiFormatter');
-const { api_result_1, api_result_2 } = require('./test_helper');
+import { removeUselessProperties, removeNullishValues } from '../src/utils/apiFormatter';
+import { api_result_1, api_result_2 } from './test_helper';
 
 // Apply the same data pipeline that Popup.js / formatResults() applies.
 function applyDataPipeline(rawFixture) {

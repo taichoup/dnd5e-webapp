@@ -1,18 +1,11 @@
-const { hasChildren, pruneProperty, removeUselessProperties, removeNullishValues } = require('../src/utils/apiFormatter');
-const helper = require('./test_helper');
-
-
-
-
-// beforeEach(() => {
-
-// });
+import { removeUselessProperties, removeNullishValues } from '../src/utils/apiFormatter';
+import { api_result_1 } from './test_helper';
 
 
 describe('removeUselessProperties()', () => {
 
     test('it should work', () => {
-        const machin = helper.api_result_1;
+        const machin = JSON.parse(JSON.stringify(api_result_1));
 
         removeUselessProperties(machin, "url");
         removeUselessProperties(machin, "index");
@@ -161,7 +154,3 @@ describe('removeNullishValues()', () => {
         });
     });
 });
-
-
-// afterAll(() => {
-// });

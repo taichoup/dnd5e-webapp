@@ -31,7 +31,7 @@ const removeNullishValues = (obj) => {
     }
 }
 
-module.exports = {
+export {
     removeUselessProperties,
     removeNullishValues,
 }
