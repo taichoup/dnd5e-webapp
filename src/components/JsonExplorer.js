@@ -7,6 +7,14 @@ const isArray = (v) => Array.isArray(v);
 const formatKey = (key) =>
   key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
+const findLabel = (item, index) => {
+  if (isArray(item)) return `Group ${index + 1}`;
+  const nameKey = Object.keys(item).find(
+    (k) => k.toLowerCase().includes("name") && isPrimitive(item[k])
+  );
+  return nameKey ? String(item[nameKey]) : `Item ${index + 1}`;
+};
+
 // --- Leaf nodes ---
 
 const PrimitiveList = ({ items }) => (
@@ -55,7 +63,7 @@ const ArrayNode = ({ data, depth }) => {
         ) : (
           <ArrayItem
             key={i}
-            label={isArray(item) ? `Group ${i + 1}` : item.name || `Item ${i + 1}`}
+            label={findLabel(item, i)}
             data={item}
             depth={depth}
           />
