@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 import { Form } from "./components/Form";
 import { Battle } from "./components/Battle";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 function App() {
   return (
@@ -19,14 +19,10 @@ function App() {
               </li>
             </ul>
           </nav>
-          <Switch>
-            <Route path="/battle">
-              <Battle />
-            </Route>
-            <Route path="/">
-              <Form />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/battle" element={<Battle />} />
+            <Route path="/" element={<Form />} />
+          </Routes>
         </div>
       </Router>
     </div>
